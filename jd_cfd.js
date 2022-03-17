@@ -100,10 +100,10 @@ if ($.isNode()) {
     await $.wait(1000)
     res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/cfd.json')
   }
-  let res2 = await getAuthorShareCode('https://raw.githubusercontent.com/zero205/updateTeam/main/shareCodes/cfd.json')
+  let res2 = await getAuthorShareCode('https://raw.githubusercontent.com/zspro/updateTeam/main/shareCodes/cfd.json')
   if (!res2) {
     await $.wait(1000)
-    res2 = await getAuthorShareCode('https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/cfd.json')
+    res2 = await getAuthorShareCode('https://raw.fastgit.org/zspro/updateTeam/main/shareCodes/cfd.json')
   }
   $.strMyShareIds = [...(res && res.shareId || []), ...(res2 || [])]
   await shareCodesFormat()
