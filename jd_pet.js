@@ -8,7 +8,7 @@
 互助码shareCode请先手动运行脚本查看打印可看到
 一天只能帮助5个人。多出的助力码无效
 
-// zero205：已添加自己账号内部互助，有剩余助力次数再帮我助力
+// zspro：已添加自己账号内部互助，有剩余助力次数再帮我助力
 
 =================================Quantumultx=========================
 [task_local]
@@ -33,9 +33,9 @@ let cookiesArr = [], cookie = '', jdPetShareArr = [], isBox = false, notify, new
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
    //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'MTAxODc2NTEzNTAwMDAwMDAwMjg3MDg2MA==@MTAxODc2NTEzMzAwMDAwMDAyNzUwMDA4MQ==@MTAxODc2NTEzMjAwMDAwMDAzMDI3MTMyOQ==@MTAxODc2NTEzNDAwMDAwMDAzMDI2MDI4MQ==@MTAxODcxOTI2NTAwMDAwMDAxOTQ3MjkzMw==@MTAxODc2NTEzMDAwMDAwMDAxMzgwNTcyNw==@MTAxODc2NTEzMzAwMDAwMDAxMzgwNDg3OQ==@MTE1NDAxNzcwMDAwMDAwMzUxNDMwMDc=@MTE1NDQ5MzYwMDAwMDAwMzUxNDMwMTE=@MTE1NDUwMTI0MDAwMDAwMDM2OTQ2Mjk1@MTAxODc2NTEzMjAwMDAwMDAyMDUxMDY2OQ==',
+  'MTAxODc2NTEzMjAwMDAwMDAxNjM0MDQwMw==@MTE1NDQ5OTUwMDAwMDAwMzgzMjk5NjM=@MTE1MzEzNjI2MDAwMDAwMDU5NjU0MDA3@MTEzMzI1MTE4NDAwMDAwMDA1OTY1NDA2MQ==@MTE1NDY3NTIwMDAwMDAwNTk2NTQwMzE=',
   //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'MTAxODc2NTEzMjAwMDAwMDAzMDI3MTMyOQ==@MTAxODcxOTI2NTAwMDAwMDAyNjA4ODQyMQ==@MTAxODc2NTEzOTAwMDAwMDAyNzE2MDY2NQ==@MTE1NDUyMjEwMDAwMDAwNDI0MDM2MDc=@MTAxODc2NTEzMjAwMDAwMDAwNDA5MzAzMw==@MTAxODc2NTEzMDAwMDAwMDAxMzgwNTcyNw==@MTAxODc2NTEzMzAwMDAwMDAxMzgwNDg3OQ==@MTE1NDAxNzcwMDAwMDAwMzUxNDMwMDc=@MTE1NDQ5MzYwMDAwMDAwMzUxNDMwMTE=@MTE1NDUwMTI0MDAwMDAwMDM2OTQ2Mjk1@MTAxODc2NTEzMjAwMDAwMDAyMDUxMDY2OQ==',
+  'MTAxODc2NTEzMjAwMDAwMDAxNjM0MDQwMw==@MTE1NDQ5OTUwMDAwMDAwMzgzMjk5NjM=@MTE1MzEzNjI2MDAwMDAwMDU5NjU0MDA3@MTEzMzI1MTE4NDAwMDAwMDA1OTY1NDA2MQ==@MTAxODc2NTEzNTAwMDAwMDAyMzc5MzM3OQ==',
 ]
 const ZLC = !(process.env.JD_JOIN_ZLC && process.env.JD_JOIN_ZLC === 'false')
 let message = '', subTitle = '', option = {};
@@ -46,7 +46,7 @@ let randomCount = $.isNode() ? 20 : 5;
 $.newShareCode = [];
 !(async () => {
   if (!process.env.JD_JOIN_ZLC) {
-    console.log(`【注意】本脚本默认会给助力池进行助力！\n如需加入助力池请添加TG群：https://t.me/jd_zero_205\n如不加入助力池互助，可添加变量名称：JD_JOIN_ZLC，变量值：false\n`)
+    console.log(`【注意】本脚本默认会给助力池进行助力！\n如需加入助力池请添加TG群：https://t.me/JDSharerChat\n如不加入助力池互助，可添加变量名称：JD_JOIN_ZLC，变量值：false\n`)
   }
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -303,7 +303,7 @@ async function slaveHelp() {
   //return
   let helpPeoples = '';
   if ($.isNode() && !process.env.PETSHARECODES) {
-    console.log(`您未填写助力码变量，开始账号内互助，再帮【zero205】助力`);
+    console.log(`您未填写助力码变量，开始账号内互助，再帮【zspro】助力`);
     $.newShareCode = [...(jdPetShareArr || []), ...(newShareCodes || [])]
   } else {
     $.newShareCode = newShareCodes
