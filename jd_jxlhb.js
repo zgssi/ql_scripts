@@ -55,7 +55,7 @@ $.appId = "e395f"
     res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jxhb.json')
   }
   if (res && res.activeId) $.activeId = res.activeId;
-  $.authorMyShareIds = ['MaLrH_9k3moL-emMEYaDJMr7jAjZgtUdnbvMz_TDeezHexffkeqtkyMtsTz2P3e-',...((res && res.codes) || [])];
+  $.authorMyShareIds = [...((res && res.codes) || [])];
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   await requestAlgo()
   await $.wait(1000)
