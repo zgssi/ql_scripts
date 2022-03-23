@@ -296,7 +296,7 @@ function pigPetLogin() {
               if (data.resultData.resultCode === 0) {
                 $.hasPig = data.resultData.resultData.hasPig;
                 if (!$.hasPig) {
-                  console.log(`\n京东账号${$.index} ${$.nickName} 未开启养猪活动,请手动去京东金融APP开启此活动\n27:/￥K6Q9gAbt8z￥，我的5斤百香果能领取啦，来养猪，一起赚`)
+                  console.log(`\n京东账号${$.index} ${$.nickName} 未开启养猪活动，请手动去京东金融APP开启此活动或复制直达口令：\n27:/￥K6Q9gAbt8z￥，我的5斤百香果能领取啦，来养猪，一起赚`)
                   return
                 }
                 if (data.resultData.resultData.wished) {
