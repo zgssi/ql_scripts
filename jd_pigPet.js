@@ -432,7 +432,7 @@ function pigPetRank() {
                   if ($.friends[i].status === 1) {
                     $.friendId = $.friends[i].uid
                     $.name = $.friends[i].nickName
-                    if (!['zero205', 'xfa05'].includes($.name)) { //放过孩子吧TT
+                    if (!['zspro'].includes($.name)) { //放过孩子吧TT
                       console.log(`去抢夺【${$.friends[i].nickName}】的食物`)
                       await $.wait(2000)
                       await pigPetFriendIndex($.friendId)
