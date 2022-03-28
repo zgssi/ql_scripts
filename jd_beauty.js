@@ -167,6 +167,12 @@ async function mr() {
     // 获得正在生产的商品信息
     client.send('{"msg":{"type":"action","args":{},"action":"product_producing"}}')
     await $.wait(20000);
+    // 再次获取用户信息，收取生产商品后可能会升级
+    client.send(`{"msg":{"type":"action","args":{"source":1},"action":"get_user"}}`);
+    await $.wait(20000);
+    // 获得升级进度
+    client.send(`{"msg":{"type":"action","args":{},"action":"level_status"}}`)
+    await $.wait(20000);
     // 获得可生成的商品列表
     client.send(`{"msg":{"type":"action","args":{"page":1,"num":10},"action":"product_lists"}}`)
     await $.wait(20000);
@@ -258,7 +264,7 @@ async function mr() {
               client.send(`{"msg":{"action":"write","type":"action","args":{"action_type":6,"channel":2,"source_app":2,"vender":"${shop.vender_id}"}}}`);
               await $.wait(5000);
             }
-            await $.wait(10000);
+            // await $.wait(10000);
           }
           count = $.taskState.product_adds.length;
           if (count < $.taskState.daily_product_add_times && process.env.FS_LEVEL) console.log(`\n去做浏览并加购任务\n`)
@@ -274,18 +280,15 @@ async function mr() {
               client.send(`{"msg":{"action":"write","type":"action","args":{"action_type":5,"channel":2,"source_app":2,"vender":"${product.id}"}}}`);
               await $.wait(5000);
             }
-            await $.wait(10000);
+            // await $.wait(10000);
           }
-          // for (let i = 0; i < vo.data.meetingplaces.length; ++i) {
-          //   const meetingplace = vo.data.meetingplaces[i];
-          //   console.log(`\n去做任务【${meetingplace.name}】`)
-          //   client.send(`{"msg":{"type":"action","args":{"source":1,"meetingplace_id":${meetingplace.id}},"action":"meetingplace_view"}}`)
-          //   await $.wait(10000);
-          // }
-          for (let i = 0; i < $.taskState.meetingplace_view.length; ++i) {
-            console.log(`去做第${i + 1}次浏览会场任务`)
-            client.send(`{"msg":{"type":"action","args":{"source":1,"meetingplace_id":${$.taskState.meetingplace_view[i]}},"action":"meetingplace_view"}}`)
-            await $.wait(10000);
+          for (let i = 0; i < vo.data.meetingplaces.length; ++i) {
+            const meetingplace = vo.data.meetingplaces[i];
+            if (!$.taskState.meetingplace_view.includes(meetingplace.id.toString())) {
+                console.log(`\n去做任务【${meetingplace.name}】`)
+                client.send(`{"msg":{"type":"action","args":{"source":1,"meetingplace_id":${meetingplace.id}},"action":"meetingplace_view"}}`)
+                await $.wait(10000);
+            }
           }
           if ($.taskState.today_answered === 0) {
             console.log(`去做每日问答任务`)
@@ -330,7 +333,7 @@ async function mr() {
         case "produce_position_info_v2":
           // console.log(`${Boolean(oc(() => vo.data))};${oc(() => vo.data.material_name) !== ''}`);
           if (vo.data && vo.data.material_name !== '') {
-            console.log(`【${oc(() => vo.data.position)}】上正在生产【${oc(() => vo.data.material_name)}】，可收取 ${vo.data.produce_num} 份`)
+            console.log(`【${oc(() => vo.data.position)}】上正在生产【${oc(() => vo.data.material_name)}】，生产中 ${vo.data.valid_electric} 份，已收取 ${vo.data.procedure.produce_num} 份`)
             if (new Date().getTime() > vo.data.procedure.end_at) {
               console.log(`去收取${oc(() => vo.data.material_name)}`)
               client.send(`{"msg":{"type":"action","args":{"position":"${oc(() => vo.data.position)}","replace_material":false},"action":"material_fetch_v2"}}`)
@@ -382,7 +385,7 @@ async function mr() {
           break
         case "material_fetch_v2":
           if (vo.code === '200' || vo.code === 200) {
-            console.log(`【${vo.data.position}】收取成功，获得${vo.data.produce_num}份${vo.data.material_name}\n`);
+            console.log(`【${vo.data.position}】收取成功，生产中 ${vo.data.valid_electric} 份，已收取 ${vo.data.procedure.produce_num} \n`);
           } else {
             console.log(`任务完成失败，错误信息${vo.msg}`)
           }
@@ -400,6 +403,18 @@ async function mr() {
             console.log(`仓库信息获取失败，错误信息${vo.msg}`)
           }
           break
+        case "level_status":
+          if (vo.code === '200' || vo.code === 200){
+              $.level_status = vo.data
+              let msg = `升级进度:`
+              for (let ls of $.level_status){
+                  msg+=`\n【${ls.product.name}】研发${ls.num}个（${ls.production}/${ls.num}）`
+              }
+              console.log(msg)
+          } else {
+              console.log(`升级进度获取失败，错误信息：${vo.msg}`)
+          }
+          break
         case "product_lists":
           let need_material = []
           if (vo.code === '200' || vo.code === 200) {
@@ -408,7 +423,14 @@ async function mr() {
             for (let product of $.products) {
               let num = Infinity
               let msg = ''
-              msg += `生产【${product.name}】`
+              msg += `【${product.name}】生产`
+              const ls = $.level_status.filter(o => o.product_id === product.id)[0]
+              // console.log(`ls:${JSON.stringify(ls)}`);
+              let need = ls.num - ls.production
+              if (need <= 0){
+                console.log(`【${product.name}】已满足升级条件，跳过`)
+                continue
+              }
               for (let material of product.product_materials) {
                 msg += `需要原料“${material.material.name}${material.num} 份” ` //material.num 需要材料数量
                 const ma = $.materials.filter(vo => vo.item_id === material.material_id)[0] //仓库里对应的材料信息
@@ -429,7 +451,11 @@ async function mr() {
               if (num !== Infinity && num > 0) {
                 msg += `，可生产 ${num}份`
                 console.log(msg)
-                console.log(`【${product.name}】可生产份数大于0，去生产`)
+                if(num > need){
+                  console.log(`【${product.name}】可生产份数[${num}]大于升级所需份数[${need}]，改为升级所需份数[${need}]`)
+                  num = need
+                }
+                console.log(`【${product.name}】去生产`)
                 //product_produce 产品研发里的生产
                 client.send(`{"msg":{"type":"action","args":{"product_id":${product.id},"amount":${num}},"action":"product_produce"}}`)
                 await $.wait(10000);
