@@ -124,6 +124,7 @@ function user_info() {
           console.log(JSON.stringify(err));
         } else {
           if (data) {
+            console.log(data)
             const res = JSON.parse(data);
             if (res && res.resultCode === 0) {
               $.isLogin = true;
