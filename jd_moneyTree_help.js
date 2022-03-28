@@ -136,7 +136,7 @@ function getsharePin() {
         } else {
           if (data) {
             const res = JSON.parse(data);
-            if (res && res.resultCode === 0) {
+            if (res && res.resultCode === 0 && res.resultData.code === "200") {
               $.isLogin = true;
               if (res.resultData.data) {
                 userInfo = res.resultData.data;
