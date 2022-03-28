@@ -526,27 +526,13 @@ function apCashWithDraw(id, poolBaseId, prizeGroupId, prizeBaseId) {
 }
 
 function getShareCode() {
-  return new Promise(resolve => {
-      $.get({
-          url: "https://raw.fastgit.org/zspro/updateTeam/main/shareCodes/joypark.json",
-          headers: {
-              "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-          }
-      }, async (err, resp, data) => {
-          try {
-              if (err) {
-                  console.log(`${JSON.stringify(err)}`);
-                  console.log(`${$.name} API请求失败，请检查网路重试`);
-              } else {
-                $.kgw_invitePin = JSON.parse(data);
-              }
-          } catch (e) {
-              $.logErr(e, resp)
-          } finally {
-              resolve();
-          }
-      })
-  })
+  $.authorCode = await getAuthorShareCode('https://raw.githubusercontent.com/zspro/updateTeam/main/shareCodes/joypark.json')
+  if (!$.authorCode) {
+    $.http.get({url: 'https://purge.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/joypark.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+    await $.wait(1000)
+    $.authorCode = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/joypark.json') || []
+  }
+  return $.authorCode
 }
 
 function taskPostClientActionUrl(body, functionId) {
