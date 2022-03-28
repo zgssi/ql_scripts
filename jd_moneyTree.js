@@ -86,7 +86,7 @@ async function jd_moneyTree() {
     const userRes = await user_info();
     if (!userRes || !userRes.realName) return
     await signEveryDay();
-    await dayWork();
+    // await dayWork();
     await harvest();
     await sell();
     await myWealth();
