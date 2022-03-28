@@ -85,9 +85,6 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                     await browseAward(task.topResource.task.advertId, index, task.type)
                 }
             }
-            // console.log(`\n集勋章得好礼  By：【zero205】`)
-            // console.log(`\n由于我自己写这个脚本的时候已经手动开启活动了\n所以不知道开启活动的代码\n没有开启的手动开启吧，活动入口：东东农场->水车\n`)
-            // await collect()
         }
     }
 

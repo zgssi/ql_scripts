@@ -35,15 +35,16 @@ if ($.isNode()) {
 }
 $.invitePinTaskList = []
 $.invitePin = [
-  "NZ42T3lD49qiTGpZsSucXRS8kD-wJ4K6FxwxUpNbb4I",
-  "zZkewfd3OKs-WtoJd8Jw6OIrD81WzO3SX56S2DGMlZ0",
-  "7zG4VHS99AUEoX1mQTkC9Q",
-  "BbsjCRrQudIL06kRvqmVln053h03GiApg7HN_Vhy_Og",
-  "sAxL-dc5T6lS6wtKqP6SlA",
-  "bcVxt4PbZdbX7tiT1Q_ubg",
-  "GLdMkFrZHXG8-YUnhakmEA",
-  "hwQ_gsL-AJeC0gGTlU0Z8w",
-  "DsYL6f_31DFANxBPMc00MA"
+  "gyisf5mAEuSp5MawnTK_NQ",
+  "kLBjzX1608GOcv5wppCn3Q",
+  "mQWrtGHvmOonR5yTwxu06YImQ5ALEH3t2NVgpsPHqD8",
+  "y48hsGbm5j85oKzjDG5rrjv_IBe9t46PaIprsBjkZSA",
+  "X9XRvMHRfL4JbIQAz4wjS3hH75R6H-lXn7Svx0-TOsY",
+  "7PKxyVxabKPpLgH_ybcWMA",
+  "ZpdT1GzZhe_xq0Y211Iyrj1sLi9nqNlQurO16qd6RMA",
+  "Sw2OUESqP98jFsxRUB81sQ",
+  "gHajnivcIqr078YVcJ3vhCmNv5ro87C0xH6txj_ppqU",
+  "Sf8BWd2m35HAhL4kMucIKw"
 ]
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
@@ -66,10 +67,10 @@ message = ""
       // if ($.isNode()) {
       //   if (process.env.HELP_JOYPARK && process.env.HELP_JOYPARK == "false") {
       //   } else {
-      //     $.kgw_invitePin = ["7zG4VHS99AUEoX1mQTkC9Q"][Math.floor((Math.random() * 1))];
+      //     $.kgw_invitePin = ["gyisf5mAEuSp5MawnTK_NQ"][Math.floor((Math.random() * 1))];
       //     let resp = await getJoyBaseInfo(undefined, 2, $.kgw_invitePin);
       //     if (resp.data && resp.data.helpState && resp.data.helpState === 1) {
-      //       $.log("帮【zero205】开工位成功，感谢！\n");
+      //       $.log("帮【zspro】开工位成功，感谢！\n");
       //     } else if (resp.data && resp.data.helpState && resp.data.helpState === 3) {
       //       $.log("你不是新用户！跳过开工位助力\n");
       //       break
@@ -177,7 +178,7 @@ message = ""
     }
   }
 
-  $.log("\n======汪汪乐园开始内部互助======\n======有剩余助力次数则帮zero205助力======\n")
+  $.log("\n======汪汪乐园开始内部互助======\n======有剩余助力次数则帮zspro助力======\n")
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
