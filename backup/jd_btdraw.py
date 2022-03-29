@@ -145,7 +145,8 @@ def getactivityid(ck):
             'accept-encoding':'gzip, deflate, br'
             }
         activityhtml=requests.get(url=activityurl,headers=htmlheaders)
-        activityid=re.search(r"activityId=.{28}",activityhtml.text,re.M|re.I).group().replace('activityId=','')
+        # activityid=re.search(r"activityId=.{28}",activityhtml.text,re.M|re.I).group().replace('activityId=','')
+        activityid=re.search(r"encodeActivityId\":\".{28}",activityhtml.text,re.M|re.I).group().replace('encodeActivityId\":\"','')
         print('活动id:'+activityid)
         return activityid
     except:
