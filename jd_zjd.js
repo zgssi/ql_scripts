@@ -1,6 +1,6 @@
 /*
 const $ = new Env('赚京豆-玩家国度');
-cron 0 0,1,2 * * * jd_syj.js
+cron "0 0,1,2 * * *" jd_syj.js
 
 最后更新：2022.3.26 00:59
 
