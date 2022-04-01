@@ -83,6 +83,7 @@ def get_remarkinfo():
         print('读取auth.json文件出错，跳过获取备注')
 
 def get_succeedinfo(ck):
+    global msg
     url='https://api.m.jd.com/client.action'
     headers={
     'accept':'application/json, text/plain, */*',
@@ -101,17 +102,17 @@ def get_succeedinfo(ck):
     try:
         for i in range(len(json.loads(response.text)['data']['list'])):
             if(json.loads(response.text)['data']['list'][i]['text']['text']).find('试用资格将保留')!=-1:
-                print(json.loads(response.text)['data']['list'][i]['trialName'])
+                print(json.loads(response.text)['data']['list'][i]['trialName']+'\n')
                 try:
-                    send("京东试用待领取物品通知",'账号名称：'+remarkinfos[ptpin]+'\n'+'商品名称:'+json.loads(response.text)['data']['list'][i]['trialName']+"\n"+"商品链接:https://item.jd.com/"+json.loads(response.text)['data']['list'][i]['skuId']+".html")
+                    msg+='账号名称：'+remarkinfos[ptpin]+'\n'+'商品名称:'+json.loads(response.text)['data']['list'][i]['trialName']+"\n"+"商品链接:https://item.jd.com/"+json.loads(response.text)['data']['list'][i]['skuId']+".html\n\n"
                     isnull=False
                 except:
-                     send("京东试用待领取物品通知",'账号名称：'+urllib.parse.unquote(ptpin)+'\n'+'商品名称:'+json.loads(response.text)['data']['list'][i]['trialName']+"\n"+"商品链接:https://item.jd.com/"+json.loads(response.text)['data']['list'][i]['skuId']+".html")
+                     msg+='账号名称：'+urllib.parse.unquote(ptpin)+'\n'+'商品名称:'+json.loads(response.text)['data']['list'][i]['trialName']+"\n"+"商品链接:https://item.jd.com/"+json.loads(response.text)['data']['list'][i]['skuId']+".html\n\n"
                      isnull=False 
         if isnull==True:
-            print("没有在有效期内待领取的试用品\n\n")
+            print("没有在有效期内待领取的试用品\n")
     except:
-        print('获取信息出错，可能是账号已过期')
+        print('获取信息出错，可能是账号已过期\n')
 if __name__ == '__main__':
     remarkinfos={}
     try:
@@ -124,6 +125,7 @@ if __name__ == '__main__':
         f = open("/jd/config/config.sh", "r", encoding='utf-8')
         cks = re.findall(r'Cookie[0-9]*="(pt_key=.*?;pt_pin=.*?;)"', f.read())
         f.close()
+    msg=""
     for ck in cks:
         ck = ck.strip()
         if ck[-1] != ';':
@@ -138,3 +140,4 @@ if __name__ == '__main__':
             printf("--账号:" + urllib.parse.unquote(ptpin) + "--")
         UserAgent=randomuserAgent()
         get_succeedinfo(ck)
+    send("京东试用待领取物品通知",msg)
