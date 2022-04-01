@@ -42,12 +42,13 @@ def load_send():
     if os.path.exists(cur_path + "/sendNotify.py"):
         try:
             from sendNotify import send
+            print("加载通知服务成功~\n")
         except:
             send=False
-            print("加载通知服务失败~")
+            print("加载通知服务失败~\n")
     else:
         send=False
-        print("加载通知服务失败~")
+        print("加载通知服务失败~\n")
 load_send()
 
 

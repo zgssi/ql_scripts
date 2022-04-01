@@ -35,12 +35,13 @@ def load_send():
     if os.path.exists(cur_path + "/sendNotify.py"):
         try:
             from sendNotify import send
+            print("加载通知服务成功~\n")
         except:
             send=False
-            printf("加载通知服务失败~")
+            printf("加载通知服务失败~\n")
     else:
         send=False
-        printf("加载通知服务失败~")
+        printf("加载通知服务失败~\n")
 load_send()
     
 def get_remarkinfo():
