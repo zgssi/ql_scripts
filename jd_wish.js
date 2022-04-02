@@ -25,8 +25,8 @@ let message = '', allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let appIdArr = ["1EFdRwqyF","1EFZWxKqP","1FFVQyqw","1EFRQwA","1EFRWxKuG","1E1xZy6s","1EFRXxg"];
-let appNameArr = ["春尚","新品来袭","1111点心动","疯狂砸金蛋","许愿抽好礼","PLUS生活特权","闪购盲盒"];
+let appIdArr = ["1FFVQyqw","1EFRQwA","1EFRWxKuG","1E1xZy6s","1EFRXxg"];
+let appNameArr = ["1111点心动","疯狂砸金蛋","许愿抽好礼","PLUS生活特权","闪购盲盒"];
 let appId, appName;
 $.shareCode = [];
 if ($.isNode()) {
@@ -121,7 +121,13 @@ async function jd_wish() {
     await healthyDay_getHomeData();
     await $.wait(2000)
 
-    let getHomeDataRes = (await healthyDay_getHomeData(false)).data.result.userInfo
+    let data = await healthyDay_getHomeData(false)
+    if(data.data.bizCode!==0)
+    {
+        console.log(data.data.bizMsg)
+        return
+    }
+    let getHomeDataRes = data.data.result.userInfo
     let forNum = Math.floor(getHomeDataRes.userScore / getHomeDataRes.scorePerLottery)
     await $.wait(2000)
 
@@ -152,8 +158,13 @@ async function healthyDay_getHomeData(type = true) {
           console.log(`${$.name} getHomeData API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
-            data = JSON.parse(data);
             // console.log(data);
+            data = JSON.parse(data);
+            if(data.data.bizCode!==0)
+            {
+                console.log(data.data.bizMsg);
+                return
+            }
             if (type) {
                for (let key of Object.keys(data.data.result.hotTaskVos).reverse()) {
                   let vo = data.data.result.hotTaskVos[key]  
