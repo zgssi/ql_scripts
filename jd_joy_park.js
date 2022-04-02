@@ -88,11 +88,11 @@ message = ""
       if ($.isNode()) {
         if (process.env.HELP_JOYPARK && process.env.HELP_JOYPARK == "false") {
         } else {
-          $.kgw_invitePin = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/jd_updateBeanHome.json')
+          $.kgw_invitePin = await getAuthorShareCode('https://raw.githubusercontent.com/zspro/updateTeam/master/shareCodes/joypark.json')
           if (!$.kgw_invitePin) {
-            $.http.get({url: 'https://purge.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/jd_updateBeanHome.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+            $.http.get({url: 'https://purge.jsdelivr.net/gh/zspro/updateTeam@master/shareCodes/joypark.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
             await $.wait(1000)
-            $.kgw_invitePin = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/jd_updateBeanHome.json') || []
+            $.kgw_invitePin = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zspro/updateTeam@master/shareCodes/joypark.json') || []
           }
           if ($.kgw_invitePin && $.kgw_invitePin.length) {
             $.log("开始帮【zspro】助力开工位\n");
