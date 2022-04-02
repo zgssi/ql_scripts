@@ -109,7 +109,6 @@ message = ""
               $.log(`他的工位已全部开完啦！\n`);
             } else {
               $.log("开工位失败！\n");
-              console.log(`${JSON.stringify(resp)}`)
             }
           }
         }
