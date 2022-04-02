@@ -45,9 +45,9 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let allMessage = '';
 let jdPandaToken = '';
-jdPandaToken = $.isNode() ? (process.env.gua_cleancart_PandaToken ? process.env.gua_cleancart_PandaToken : `${jdPandaToken}`) : ($.getdata('gua_cleancart_PandaToken') ? $.getdata('gua_cleancart_PandaToken') : `${jdPandaToken}`);
+jdPandaToken = $.isNode() ? (process.env.PANDA_TOKEN ? process.env.PANDA_TOKEN : `${jdPandaToken}`) : ($.getdata('PANDA_TOKEN') ? $.getdata('PANDA_TOKEN') : `${jdPandaToken}`);
 if (!jdPandaToken) {
-    console.log('请填写Panda获取的Token,变量是gua_cleancart_PandaToken');
+    console.log('请填写Panda获取的Token,变量是PANDA_TOKEN\n传送门:https://t.me/pang_da_bot');
 	return;
 }
 
