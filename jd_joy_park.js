@@ -95,7 +95,6 @@ message = ""
             $.kgw_invitePin = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zspro/updateTeam@master/shareCodes/joypark.json') || []
           }
           if ($.kgw_invitePin && $.kgw_invitePin.length) {
-            $.log("开始帮【zspro】助力开工位\n");
             $.kgw_invitePin = [...($.kgw_invitePin || [])][Math.floor((Math.random() * $.kgw_invitePin.length))];
             let resp = await getJoyBaseInfo(undefined, 2, $.kgw_invitePin);
             if (resp.helpState && resp.helpState === 1) {
