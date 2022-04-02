@@ -97,6 +97,10 @@ message = ""
           if ($.kgw_invitePin && $.kgw_invitePin.length) {
             $.kgw_invitePin = [...($.kgw_invitePin || [])][Math.floor((Math.random() * $.kgw_invitePin.length))];
             let resp = await getJoyBaseInfo(undefined, 2, $.kgw_invitePin);
+            if(!resp){
+              $.log("服务端异常，不知道为啥有时候这样，后面再观察一下，手动执行应该又没问题了")
+              continue
+            }
             if (resp.helpState && resp.helpState === 1) {
               $.log("帮【zspro】开工位成功，感谢！\n");
             } else if (resp.helpState && resp.helpState === 3) {
