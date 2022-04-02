@@ -30,10 +30,10 @@ let cookiesArr = [], cookie = '', message;
 let helpAuthor = true;
 const randomCount = $.isNode() ? 5 : 5;
 let cash_exchange = false;//是否消耗2元红包兑换200京豆，默认否
-const inviteCodes = [
-  `Khs-buS6b-Eg9W_UzXU@Kh4-auy1Y_w78m7dwnEX@eU9YaL7jY6oi-GvWw3pBgw@eU9YabnhZKkjo2_Rw3QR1w@eU9Ya--wZfpw9GrWyiVChw@cU9wM7f3NaR3@eU9Ya-vhMq0u9zyHzXYWhw@eU9Ya-_hY691pG_VwnpGhw@9pufuUMBY_4@f0RpO-i0Zvkg9m4`,
-  `f0RpO-i0Zvkg9m4@9pufuUMBY_4@eU9Ya-_hY691pG_VwnpGhw@eU9Ya-vhMq0u9zyHzXYWhw@cU9wM7f3NaR3@eU9Ya--wZfpw9GrWyiVChw@eU9YabnhZKkjo2_Rw3QR1w@eU9YaL7jY6oi-GvWw3pBgw@Kh4-auy1Y_w78m7dwnEX@Khs-buS6b-Eg9W_UzXU`,
-]
+// const inviteCodes = [
+//   `Khs-buS6b-Eg9W_UzXU@Kh4-auy1Y_w78m7dwnEX@eU9YaL7jY6oi-GvWw3pBgw@eU9YabnhZKkjo2_Rw3QR1w@eU9Ya--wZfpw9GrWyiVChw@cU9wM7f3NaR3@eU9Ya-vhMq0u9zyHzXYWhw@eU9Ya-_hY691pG_VwnpGhw@9pufuUMBY_4@f0RpO-i0Zvkg9m4`,
+//   `f0RpO-i0Zvkg9m4@9pufuUMBY_4@eU9Ya-_hY691pG_VwnpGhw@eU9Ya-vhMq0u9zyHzXYWhw@cU9wM7f3NaR3@eU9Ya--wZfpw9GrWyiVChw@eU9YabnhZKkjo2_Rw3QR1w@eU9YaL7jY6oi-GvWw3pBgw@Kh4-auy1Y_w78m7dwnEX@Khs-buS6b-Eg9W_UzXU`,
+// ]
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -57,12 +57,12 @@ if (!jdPandaToken) {
     return;
   }
   await requireConfig()
-  $.authorCode = await getAuthorShareCode('https://raw.githubusercontent.com/zspro/updateTeam/main/shareCodes/jd_updateCash.json')
-  if (!$.authorCode) {
-    $.http.get({url: 'https://purge.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jd_updateCash.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
-    await $.wait(1000)
-    $.authorCode = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jd_updateCash.json') || []
-  }
+  // $.authorCode = await getAuthorShareCode('https://raw.githubusercontent.com/zspro/updateTeam/main/shareCodes/jd_updateCash.json')
+  // if (!$.authorCode) {
+  //   $.http.get({url: 'https://purge.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jd_updateCash.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+  //   await $.wait(1000)
+  //   $.authorCode = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jd_updateCash.json') || []
+  // }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -381,18 +381,18 @@ function requireConfig() {
       }
     }
     console.log(`共${cookiesArr.length}个京东账号\n`);
-    $.shareCodesArr = [];
-    if ($.isNode()) {
-      Object.keys(shareCodes).forEach((item) => {
-        if (shareCodes[item]) {
-          $.shareCodesArr.push(shareCodes[item])
-        }
-      })
-    } else {
-      if ($.getdata('jd_cash_invite')) $.shareCodesArr = $.getdata('jd_cash_invite').split('\n').filter(item => !!item);
-      console.log(`\nBoxJs设置的京东签到领现金邀请码:${$.getdata('jd_cash_invite')}\n`);
-    }
-    console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
+    // $.shareCodesArr = [];
+    // if ($.isNode()) {
+    //   Object.keys(shareCodes).forEach((item) => {
+    //     if (shareCodes[item]) {
+    //       $.shareCodesArr.push(shareCodes[item])
+    //     }
+    //   })
+    // } else {
+    //   if ($.getdata('jd_cash_invite')) $.shareCodesArr = $.getdata('jd_cash_invite').split('\n').filter(item => !!item);
+    //   console.log(`\nBoxJs设置的京东签到领现金邀请码:${$.getdata('jd_cash_invite')}\n`);
+    // }
+    // console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
     resolve()
   })
 }
