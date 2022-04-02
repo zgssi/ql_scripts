@@ -62,33 +62,29 @@ message = ""
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      $.openIndex = 0
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      // if ($.isNode()) {
-      //   if (process.env.HELP_JOYPARK && process.env.HELP_JOYPARK == "false") {
-      //   } else {
-      //     $.kgw_invitePin = ["gyisf5mAEuSp5MawnTK_NQ"][Math.floor((Math.random() * 1))];
-      //     let resp = await getJoyBaseInfo(undefined, 2, $.kgw_invitePin);
-      //     if (resp.data && resp.data.helpState && resp.data.helpState === 1) {
-      //       $.log("帮【zspro】开工位成功，感谢！\n");
-      //     } else if (resp.data && resp.data.helpState && resp.data.helpState === 3) {
-      //       $.log("你不是新用户！跳过开工位助力\n");
-      //       break
-      //     } else if (resp.data && resp.data.helpState && resp.data.helpState === 2) {
-      //       $.log(`他的工位已全部开完啦！\n`);
-      //       $.openIndex++
-      //     } else {
-      //       $.log("开工位失败！\n");
-      //     }
-      //   }
-      // }
+      if ($.isNode()) {
+        if (process.env.HELP_JOYPARK && process.env.HELP_JOYPARK == "false") {
+        } else {
+          $.kgw_invitePin = ["gyisf5mAEuSp5MawnTK_NQ"][Math.floor((Math.random() * 1))];
+          let resp = await getJoyBaseInfo(undefined, 2, $.kgw_invitePin);
+          if (resp.data && resp.data.helpState && resp.data.helpState === 1) {
+            $.log("帮【zspro】开工位成功，感谢！\n");
+          } else if (resp.data && resp.data.helpState && resp.data.helpState === 3) {
+            $.log("你不是新用户！跳过开工位助力\n");
+          } else if (resp.data && resp.data.helpState && resp.data.helpState === 2) {
+            $.log(`他的工位已全部开完啦！\n`);
+          } else {
+            $.log("开工位失败！\n");
+          }
+        }
+      }
       await getJoyBaseInfo()
       if ($.joyBaseInfo && $.joyBaseInfo.invitePin) {
         $.log(`${$.name} - ${$.UserName}  助力码: ${$.joyBaseInfo.invitePin}`);
         $.invitePinTaskList.push($.joyBaseInfo.invitePin);
       } else {
         $.log(`${$.name} - ${$.UserName}  助力码: null`);
-        $.invitePinTaskList.push('');
         $.isLogin = false
         $.log("服务端异常，不知道为啥有时候这样，后面再观察一下，手动执行应该又没问题了")
         continue
@@ -274,9 +270,7 @@ function getJoyBaseInfo(taskId = '', inviteType = '', inviterPin = '') {
       } catch (e) {
         $.logErr(e, resp)
       } finally {
-        $.log(`resolve start`)
         resolve(data);
-        $.log(`resolve end`)
       }
     })
   })
