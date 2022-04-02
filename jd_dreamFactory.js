@@ -98,7 +98,7 @@ if ($.isNode()) {
         }
         continue
       }
-      await jdDreamFactory()
+      await jdDreamFactory(i + 1 <= cookiesArr.length / 7)
     }
   }
   for (let j = 0; j < cookiesArr.length; j++) {
@@ -141,10 +141,16 @@ if ($.isNode()) {
     $.done();
   })
 
-async function jdDreamFactory() {
+async function jdDreamFactory(kt) {
   try {
     await userInfo();
     await QueryFriendList();//查询今日招工情况以及剩余助力次数
+    if (tuanActiveId) {
+      if (kt) {
+        await tuanActivity();
+      }
+      await QueryAllTuan();
+    }
     // await joinLeaderTuan();//参团
     if (!$.unActive) return
     // await collectElectricity()
@@ -152,12 +158,8 @@ async function jdDreamFactory() {
     await taskList();
     await investElectric();
     await QueryHireReward();//收取招工电力
-//     await PickUp();//收取自家的地下零件
-//     await stealFriend();
-    if (tuanActiveId) {
-      await tuanActivity();
-      await QueryAllTuan();
-    }
+    // await PickUp();//收取自家的地下零件
+    // await stealFriend();
     await exchangeProNotify();
     await showMsg();
   } catch (e) {
@@ -1050,7 +1052,7 @@ async function tuanActivity() {
 async function joinLeaderTuan() {
   let res = await updateTuanIdsCDN('https://raw.githubusercontent.com/zspro/updateTeam/main/shareCodes/jd_updateFactoryTuanId.json')
   if (!res) {
-    $.http.get({url: 'https://purge.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jd_updateFactoryTuanId.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+    $.http.get({ url: 'https://purge.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jd_updateFactoryTuanId.json' }).then((resp) => { }).catch((e) => $.log('刷新CDN异常', e));
     await $.wait(1000)
     res = await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/jd_updateFactoryTuanId.json');
   }
@@ -1380,7 +1382,7 @@ async function showMsg() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://transfer.nz.lu/jxfactory`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({ url: `https://transfer.nz.lu/jxfactory`, 'timeout': 10000 }, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
