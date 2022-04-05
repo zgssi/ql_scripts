@@ -649,7 +649,7 @@ function userInfo() {
             if (data['ret'] === 0) {
               data = data['data'];
               $.unActive = true;//标记是否开启了京喜活动或者选购了商品进行生产
-              $.encryptPin = '';
+              $.encryptPin = data.user.encryptPin;
               $.shelvesList = [];
               if (data.factoryList && data.productionList) {
                 const production = data.productionList[0];
@@ -658,7 +658,6 @@ function userInfo() {
                 $.factoryId = factory.factoryId;//工厂ID
                 $.productionId = production.productionId;//商品ID
                 $.commodityDimId = production.commodityDimId;
-                $.encryptPin = data.user.encryptPin;
 
                 // subTitle = data.user.pin;
                 await GetCommodityDetails();//获取已选购的商品信息
