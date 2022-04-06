@@ -675,7 +675,7 @@ async function missions() {
         await $.wait(1000)
         let parse
         if (item.url) {
-          parse = url.parse(item.url, true, true)
+          parse = url.parse(item.url.replace("#",""), true, true)
         } else {
           parse = {}
         }
