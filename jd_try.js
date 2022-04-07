@@ -95,7 +95,7 @@ let args_xh = {
     /*
      * 试用商品类型，默认全部
      * 下面有一个function是可以获取所有tabId的，名为try_tabList
-     * 精选 - 103
+     * 精选 - 103（全是付费试用）
      * 免费试 - 104
      * 母婴玩具 - 9
      * 美妆护肤 - 7
@@ -114,7 +114,7 @@ let args_xh = {
      * 获取时间（2022年4月6日 19:40:45）
      * 可设置环境变量：JD_TRY_TABID，用@进行分隔
      * */
-    tabId: process.env.JD_TRY_TABID && process.env.JD_TRY_TABID.split('@').map(Number) || [103, 104, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+    tabId: process.env.JD_TRY_TABID && process.env.JD_TRY_TABID.split('@').map(Number) || [104, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
     /*
      * 试用商品标题过滤，黑名单，当标题存在关键词时，则不加入试用组
      * 当白名单和黑名单共存时，黑名单会自动失效，优先匹配白名单，匹配完白名单后不会再匹配黑名单，望周知
