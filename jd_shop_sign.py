@@ -39,7 +39,7 @@ getCookies()
 
 # 读取tokens
 tokens = []
-token_env={}
+token_env = {}
 def getTokens():
     global tokens,token_env
     tokens_envs = get_envs("DPQDTK")
@@ -50,7 +50,7 @@ def getTokens():
         log("请添加环境变量:DPQDTK=tk1&tk2...,并查看变量状态!")
         sys.exit()
     # 缓存变量便于修改
-    token_env=tokens_envs[0]
+    token_env = tokens_envs[0]
     # 随机排序
     # random.shuffle(tokens)
     # 去重
@@ -68,6 +68,23 @@ pattern_pin = re.compile(r'pt_pin=([\w\W]*?);')
 pattern_data = re.compile(r'\(([\w\W]*?)\)')
 
 
+# 奖品字典
+def prize_dic(prize):
+    prize_type = prize["type"]
+    prize_discount = int(prize["discount"])
+    if prize_type == 1:# 优惠券
+        return "[{0}-{1}]优惠券".format(int(prize["quota"]),prize_discount)
+    elif prize_type == 4:# 豆豆
+        return "[{0}]豆豆".format(prize_discount)
+    elif prize_type == 6:# 积分
+        return "[{0}]积分".format(prize_discount)
+    elif prize_type == 14:# 红包
+        return "[{0}]红包".format(prize_discount / 100)
+    else:# 未知
+        log(prize)
+        return "[{0}]未知".format(prize_discount)
+
+
 # 获取活动信息
 getActivityInfoDic = {}
 def getActivityInfo(token):
@@ -82,7 +99,7 @@ def getActivityInfo(token):
         "accept": "*/*",
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-        # "cookie": cookie.encode(),
+        "cookie": random.choice(cookies).encode(),
         "referer": 'https://h5.m.jd.com/',
         "User-Agent": UA
     }
@@ -95,7 +112,7 @@ def getActivityInfo(token):
         if res.status_code != 200:
             log("status_code:",res.status_code)
             log(res.text)
-            return 0,0
+            return 0,0,0
 
         re_list = pattern_data.search(res.text)
         data = json.loads(re_list.group(1))
@@ -109,18 +126,38 @@ def getActivityInfo(token):
             log(data["msg"])
             tokens.remove(token)
             log("移除token")
-            return 0,0
+            return 0,0,0
         elif data["code"] == 200:
             activityId = data["data"]["id"]
             shopId = data["data"]["venderId"]
-            getActivityInfoDic[token] = [activityId,shopId]
-            return activityId,shopId
+            if shopId > 0:
+                # 获取店铺名称
+                shopName = getShopName(shopId)
+                log("〖{0}〗".format(shopName))
+            discount = 0
+            for item in data["data"]["prizeRuleList"]:
+                gifts = []
+                for prize in item["prizeList"]:
+                    gifts.append(prize_dic(prize))
+                    if prize["type"] == 4 or prize["type"] == 14:#豆豆 或 红包
+                        discount += int(prize["discount"])
+                log("日签{0}天可领取：{1}".format(item["level"],gifts))
+            for item in data["data"]["continuePrizeRuleList"]:
+                gifts = []
+                for prize in item["prizeList"]:
+                    gifts.append(prize_dic(prize))
+                    if prize["type"] == 4 or prize["type"] == 14:#豆豆 或 红包
+                        discount += int(prize["discount"])
+                log("连签{0}天可领取：{1}".format(item["level"],gifts))
+            log("豆豆+红包={0}".format(discount))
+            getActivityInfoDic[token] = [activityId,shopId,discount]
+            return activityId,shopId,discount
         else:
             log(data)
-            return 0,0
+            return 0,0,0
     except Exception as e:
         log("获取活动信息错误：",e)
-        return 0,0
+        return 0,0,0
 
 
 # 获取店铺名称
@@ -210,59 +247,51 @@ def getSignRecord(cookie,token,shopId,activityId):
         log("获取签到记录错误：",e)
 
 
+# 加载活动详情
+for i,token in enumerate(tokens.copy()):
+    log("\n{0}. {1}".format(i + 1,token))
+    getActivityInfo(token)
+# log(sorted(getActivityInfoDic.items(),key = lambda x:x[1][2],reverse = True))
+
+
 # 开始签到
 for i,cookie in enumerate(cookies):
 
     pin = pattern_pin.search(cookie).group(1)
     log("\n=====开始【账号{0}】{1}=====".format(i + 1,pin))
 
-    for j,token in enumerate(tokens.copy()):
-        log("\n{0}. {1}".format(j + 1,token))
-
-        # 获取活动信息
-        activityId,shopId = getActivityInfo(token)
+    j = 0
+    for token,value in sorted(getActivityInfoDic.items(),key = lambda x:x[1][2],reverse = True):
+        j += 1
+        log("\n{0}. {1}".format(j,token))
+        activityId = value[0]
+        shopId = value[1]
         # log(activityId,shopId)
+
         if activityId == 0:
             continue
-        if shopId > 0:
-            # 获取店铺名称
-            shopName = getShopName(shopId)
-            log("〖{0}〗".format(shopName))
         
         # 签到
         # time.sleep(1)
-        data=signCollectGift(cookie,token,activityId)
+        data = signCollectGift(cookie,token,activityId)
         if data["code"] == 200:
             log("签到成功")
             for item in data["data"]:
                 for prize in item["prizeList"]:
-                    prize_type=prize["type"]
-                    prize_discount=int(prize["discount"])
-                    if prize_type==1:# 优惠券
-                        gift="[{0}-{1}]优惠券".format(int(prize["quota"]),prize_discount)
-                    elif prize_type==4:# 豆豆
-                        gift="[{0}]豆豆".format(prize_discount)
-                    elif prize_type==6:# 积分
-                        gift="[{0}]积分".format(prize_discount)
-                    elif prize_type==14:# 红包
-                        gift="[{0}]红包".format(prize_discount/100)
-                    else:# 未知
-                        gift="[{0}]未知".format(prize_discount)
-                        log(prize)
-                    log("获得{0}".format(gift))
+                    log("获得{0}".format(prize_dic(prize)))
         else:
-            msg=data["msg"]
+            msg = data["msg"]
             log(msg)
             
             if "签到用户未登录" in msg:
                 log("禁用并结束当前账号")
                 # disable_env()
                 break
-            elif msg=="当前不存在有效的活动!":
+            elif msg == "当前不存在有效的活动!":
                 log("移除token")
                 tokens.remove(token)
                 continue
-            elif msg=="用户达到签到上限":
+            elif msg == "用户达到签到上限":
                 log("结束当前账号")
                 break
         
@@ -276,7 +305,7 @@ for i,cookie in enumerate(cookies):
 
 # 更新变量
 log("\n开始更新店铺token环境变量")
-msg="有效店铺签到token{0}个".format(len(tokens))
+msg = "有效店铺签到token{0}个".format(len(tokens))
 log(msg)
-b=put_envs(token_env.get('id'), token_env.get('name'), "&".join(tokens), msg)
+b = put_envs(token_env.get('id'), token_env.get('name'), "&".join(tokens), msg)
 log("更新{0}！".format(b))
