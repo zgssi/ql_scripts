@@ -12,7 +12,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
-let activityIdList = '';
+let activityIdList = '18';
 let activityIdArr = [];
 let activityId = '';
 if ($.isNode()) {
@@ -35,17 +35,6 @@ $.outFlag = 0
       "open-url": "https://bean.m.jd.com/"
     });
     return;
-  }
-  if (!activityIdList) {
-    $.log(`没有电脑配件ID，尝试获取远程`);
-    let data = await getData("https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/dlpj.json")
-    if (data && data.length) {
-        $.log(`获取到远程且有数据`);
-        activityIdList = data.join('@')
-    }else{
-        $.log(`获取失败或当前无远程数据`);
-        return
-    }
   }
   MD5()
   for (let i = 0; i < cookiesArr.length; i++) {
