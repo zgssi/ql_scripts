@@ -280,6 +280,9 @@ for i,cookie in enumerate(cookies):
                 for prize in item["prizeList"]:
                     log("获得{0}".format(prize_dic(prize)))
         else:
+            if "msg" not in data:
+                log(data)
+                continue
             msg = data["msg"]
             log(msg)
             
