@@ -25,9 +25,6 @@ let cookie: string = '', UserName: string, res: any
         console.log('收获失败：', res.message)
       }
       res = await api('initForFarm', { "version": 11, "channel": 3, "babelChannel": 0 })
-      if (res.farmUserPro.treeState == 1) {
-        console.log('种植成功：', res.farmUserPro.name)
-      }
     }
     if (res.farmUserPro.treeState === 3) {
       let element = res.farmLevelWinGoods[4][0];
