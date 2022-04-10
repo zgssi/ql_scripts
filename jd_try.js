@@ -456,7 +456,7 @@ function try_feedsList(tabId, page) {
                                 } else {
                                     tempKeyword = ``;
                                     if (parseFloat(item.jdPrice) <= args_xh.jdPrice) {
-                                        args_xh.printLog ? console.log(`商品被过滤，${item.jdPrice} < ${args_xh.jdPrice} \n`) : ''
+                                        args_xh.printLog ? console.log(`商品被过滤，${parseFloat(item.jdPrice).toFixed(2)} < ${args_xh.jdPrice} \n`) : ''
                                     } else if (parseFloat(item.supplyNum) < args_xh.minSupplyNum && item.supplyNum !== null) {
                                         args_xh.printLog ? console.log(`商品被过滤，提供申请的份数小于预设申请的份数 \n`) : ''
                                     } else if (parseFloat(item.applyNum) > args_xh.applyNumFilter && item.applyNum !== null) {
