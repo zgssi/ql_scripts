@@ -213,8 +213,13 @@ def signCollectGift(cookie,token,activityId):
         data = json.loads(re_list.group(1))
         # log(data)
 
-        # 返回主方法处理
-        return data
+        if data["code"] == "-1":
+            log("限流，1秒后重试...")
+            time.sleep(1)
+            return signCollectGift(token)
+        else:
+            # 返回主方法处理
+            return data
     except Exception as e:
         log("签到错误：",e)
 
