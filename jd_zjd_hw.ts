@@ -5,7 +5,7 @@
  */
 
 import axios from "axios";
-import { zjdInit, zjdH5st } from "./utils/hw_zjd_tool.js";
+import { zjdInit, zjdH5st } from "./utils/jd_zjd_tool.js";
 import { o2s, wait, requireConfig, getshareCodeHW } from "./TS_USER_AGENTS";
 import { SHA256 } from "crypto-js";
 
