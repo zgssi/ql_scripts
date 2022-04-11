@@ -216,7 +216,7 @@ def signCollectGift(cookie,token,activityId):
         if data["code"] == "-1":
             log("限流，1秒后重试...")
             time.sleep(1)
-            return signCollectGift(cookie,token,activityId))
+            return signCollectGift(cookie,token,activityId)
         else:
             # 返回主方法处理
             return data
