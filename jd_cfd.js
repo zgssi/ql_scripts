@@ -100,7 +100,7 @@ if ($.isNode()) {
     await $.wait(1000)
     res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/cfd.json')
   }
-  $.strMyShareIds = [...(res && res.shareId || [])]
+  $.strMyShareIds = [...(res || [])]
   await shareCodesFormat()
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
