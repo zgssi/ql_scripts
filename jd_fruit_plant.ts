@@ -1,5 +1,5 @@
 /**
- * 农场自动收+种4级
+ * 农场自动收+种4/3/2级
  * cron: 1 0,1,2 * * *
  */
 
@@ -16,6 +16,11 @@ let cookie: string = '', UserName: string, res: any
     console.log(`\n开始【京东账号${index + 1}】${UserName}\n`)
 
     res = await api('initForFarm', { "version": 11, "channel": 3, "babelChannel": 0 })
+    if (!res.farmUserPro) {
+      console.log(res)
+      console.log('貌似火爆了，跳过！')
+      continue
+    }
     if (![2, 3].includes(res.farmUserPro.treeState)) {
       console.log('正在种植...')
     }
@@ -28,6 +33,14 @@ let cookie: string = '', UserName: string, res: any
     }
     if (res.farmUserPro.treeState === 3) {
       let element = res.farmLevelWinGoods[4][0];
+      if (!element) {
+        console.log('4级不可种，降为3级')
+        element = res.farmLevelWinGoods[3][0];
+      }
+      if (!element) {
+        console.log('3级不可种，降为2级')
+        element = res.farmLevelWinGoods[2][0];
+      }
       res = await api('choiceGoodsForFarm', { "imageUrl": '', "nickName": '', "shareCode": '', "goodsType": element.type, "type": "0", "version": 11, "channel": 3, "babelChannel": 0 });
       o2s(res)
       await api('gotStageAwardForFarm', { "type": "4", "version": 11, "channel": 3, "babelChannel": 0 });
