@@ -1,5 +1,5 @@
 /**
- * cron: 15 0,1,6,18 * * *
+ * cron: 1 0,1,6,18 * * *
  * CK1     HW.ts -> 内部
  * CK2～n  内部   -> HW.ts
  */
@@ -36,8 +36,8 @@ let shareCodes: INVITE[] = [], shareCodesHW = [], shareCodesSelf: INVITE[] = []
         }
         await wait(2000)
     }
-    console.log('内部助力')
-    o2s(shareCodesSelf)
+    console.log('\n内部助力')
+    // o2s(shareCodesSelf)
 
     // 助力
     for (let [index, value] of cookiesArr.entries()) {
@@ -78,12 +78,18 @@ let shareCodes: INVITE[] = [], shareCodesHW = [], shareCodesSelf: INVITE[] = []
         }
     }
 
+    console.log('\开始挖宝')
+
     // 开挖
     for (let [index, value] of cookiesArr.entries()) {
         cookie = value
         UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
         console.log(`\n开始【京东账号${index + 1}】${UserName}\n`)
         await requestAlgo('ce6c2', 'jdltapp;')
+        if (!res.data) {
+            console.log(res)
+            continue
+        }
         let blood: number = res.data.blood
         for (let i = 0; i < 4; i++) {
             if (blood <= 1) {
