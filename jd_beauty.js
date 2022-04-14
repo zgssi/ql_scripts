@@ -333,7 +333,7 @@ async function mr() {
         case "produce_position_info_v2":
           // console.log(`${Boolean(oc(() => vo.data))};${oc(() => vo.data.material_name) !== ''}`);
           if (vo.data && vo.data.material_name !== '') {
-            console.log(`【${oc(() => vo.data.position)}】上正在生产【${oc(() => vo.data.material_name)}】，生产中 ${vo.data.valid_electric} 份，已收取 ${vo.data.procedure.produce_num} 份`)
+            console.log(`【${oc(() => vo.data.position)}】上正在生产【${oc(() => vo.data.material_name)}】，已收取 ${vo.data.procedure.produce_num} 份，剩余电力 ${vo.data.valid_electric} \n`)
             if (new Date().getTime() > vo.data.procedure.end_at) {
               console.log(`去收取${oc(() => vo.data.material_name)}`)
               client.send(`{"msg":{"type":"action","args":{"position":"${oc(() => vo.data.position)}","replace_material":false},"action":"material_fetch_v2"}}`)
@@ -348,7 +348,7 @@ async function mr() {
               let ma
               console.log(`$.needs:${JSON.stringify($.needs)}`);
               if($.needs.length){
-                ma = $.needs.pop()
+                ma = $.needs[$.needs.length-1]
                 console.log(`ma:${JSON.stringify(ma)}`);
               } else {
                 ma = $.material.base[0]['items'][positionList.indexOf(vo.data.position)];
@@ -374,6 +374,12 @@ async function mr() {
           }
           break
         case "material_produce_v2":
+          if(vo.code !== 200)
+          {
+              console.log(vo.msg)
+              break
+          }
+          $.needs.pop()
           console.log(`【${oc(() => vo.data.position)}】上开始生产${oc(() => vo.data.material_name)}`)
           client.send(`{"msg":{"type":"action","args":{"position":"${oc(() => vo.data.material_name)}"},"action":"to_employee_v2"}}`)
           await $.wait(5000);
@@ -385,7 +391,7 @@ async function mr() {
           break
         case "material_fetch_v2":
           if (vo.code === '200' || vo.code === 200) {
-            console.log(`【${vo.data.position}】收取成功，生产中 ${vo.data.valid_electric} 份，已收取 ${vo.data.procedure.produce_num} \n`);
+            console.log(`【${vo.data.position}】收取成功，已收取 ${vo.data.procedure.produce_num} 份，剩余电力 ${vo.data.valid_electric} \n`);
           } else {
             console.log(`任务完成失败，错误信息${vo.msg}`)
           }
