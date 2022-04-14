@@ -140,7 +140,7 @@ async function jdBeauty() {
 
 async function mr() {
   $.coins = 0
-  let positionList = ['b1', 'h1', 's1', 'b2', 'h2', 's2']
+  let positionList = ['b1', 'b2', 'h1', 'h2', 's1', 's2']
   $.tokens = []
   $.pos = []
   $.helpInfo = []
@@ -161,7 +161,7 @@ async function mr() {
       client.send(`ping`)
       await $.wait(10000);
     }
-    console.log(`\n========生产任务相关========\n`)
+    console.log(`\n========生产任务相关========`)
     client.send(`{"msg":{"type":"action","args":{},"action":"get_produce_material"}}`)
     await $.wait(20000);
     // 获得正在生产的商品信息
@@ -333,7 +333,7 @@ async function mr() {
         case "produce_position_info_v2":
           // console.log(`${Boolean(oc(() => vo.data))};${oc(() => vo.data.material_name) !== ''}`);
           if (vo.data && vo.data.material_name !== '') {
-            console.log(`【${oc(() => vo.data.position)}】上正在生产【${oc(() => vo.data.material_name)}】，已收取 ${vo.data.procedure.produce_num} 份，剩余电力 ${vo.data.valid_electric} \n`)
+            console.log(`【${oc(() => vo.data.position)}】上正在生产【${oc(() => vo.data.material_name)}】，已收取 ${vo.data.procedure.produce_num} 份，剩余电力 ${vo.data.valid_electric} `)
             if (new Date().getTime() > vo.data.procedure.end_at) {
               console.log(`去收取${oc(() => vo.data.material_name)}`)
               client.send(`{"msg":{"type":"action","args":{"position":"${oc(() => vo.data.position)}","replace_material":false},"action":"material_fetch_v2"}}`)
@@ -391,7 +391,7 @@ async function mr() {
           break
         case "material_fetch_v2":
           if (vo.code === '200' || vo.code === 200) {
-            console.log(`【${vo.data.position}】收取成功，已收取 ${vo.data.procedure.produce_num} 份，剩余电力 ${vo.data.valid_electric} \n`);
+            console.log(`【${vo.data.position}】收取成功，已收取 ${vo.data.procedure.produce_num} 份，剩余电力 ${vo.data.valid_electric} `);
           } else {
             console.log(`任务完成失败，错误信息${vo.msg}`)
           }
@@ -490,7 +490,7 @@ async function mr() {
         case "collect_coins":
           if (vo.code === '200' || vo.code === 200) {
             // console.log(`product_produce:${JSON.stringify(vo)}`)
-            console.log(`收取成功，获得${vo['data']['coins']}美妆币，当前总美妆币：${vo['data']['user_coins']}\n`)
+            console.log(`收取成功，获得${vo['data']['coins']}美妆币，当前总美妆币：${vo['data']['user_coins']}`)
           } else {
             console.log(`收取美妆币失败，错误信息${vo.msg}`)
           }
