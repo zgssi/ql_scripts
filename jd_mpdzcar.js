@@ -4,7 +4,7 @@
 先跑积分,不要问为什么分开😂
 BY：小埋
 
-10 8 * * * jd_mpdzcar.js
+20 6,10 * * * jd_mpdzcar.js
 */
 const $ = new Env("头文子J");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
