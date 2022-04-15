@@ -142,16 +142,19 @@ def getActivityInfo(token):
                     if prize["type"] == 4 or prize["type"] == 14:#豆豆 或 红包
                         discount += int(prize["discount"])
                 log("日签{0}天可领取：{1}".format(item["level"],gifts))
+            maxLevel = 1
             for item in data["data"]["continuePrizeRuleList"]:
                 gifts = []
                 for prize in item["prizeList"]:
                     gifts.append(prize_dic(prize))
                     if prize["type"] == 4 or prize["type"] == 14:#豆豆 或 红包
                         discount += int(prize["discount"])
+                        maxLevel = item["level"]
                 log("连签{0}天可领取：{1}".format(item["level"],gifts))
-            log("豆豆+红包={0}".format(discount))
-            getActivityInfoDic[token] = [activityId,shopId,discount]
-            return activityId,shopId,discount
+            dayRate = round(discount / maxLevel,2)
+            log("豆豆+红包={0}，日收益率={1}".format(discount,dayRate))
+            getActivityInfoDic[token] = [activityId,shopId,dayRate]
+            return activityId,shopId,dayRate
         else:
             log(data)
             return 0,0,0
@@ -268,10 +271,10 @@ for i,cookie in enumerate(cookies):
     j = 0
     for token,value in sorted(getActivityInfoDic.items(),key = lambda x:x[1][2],reverse = True):
         j += 1
-        log("\n{0}. {1}".format(j,token))
         activityId = value[0]
         shopId = value[1]
-        # log(activityId,shopId)
+        dayRate = value[2]
+        log("\n{0}. {1} 日收益率：{2}".format(j,token,dayRate))
 
         if activityId == 0:
             continue
