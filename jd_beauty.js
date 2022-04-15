@@ -351,21 +351,17 @@ async function mr() {
                 ma = $.needs[$.needs.length-1]
                 console.log(`ma:${JSON.stringify(ma)}`);
               } else {
-                ma = $.material.base[0]['items'][positionList.indexOf(vo.data.position)];
-                console.log(`elsema:${JSON.stringify(ma)}`);
+                //当不缺升级进度所需要的产品研发所需要的材料时，随机生产基础材料。
+                //注释后只生产升级进度所需要的产品研发所需要的材料。
+                // let base_level=$.material.base[Math.floor(Math.random()*$.material.base.length)]
+                // ma = base_level['items'][Math.floor(Math.random()*base_level['items'].length)];
+                // console.log(`elsema:${JSON.stringify(ma)}`);
               }
               console.log(`ma booleam${Boolean(ma)}`);
               if (ma) {
                 console.log(`去生产${ma.name}`)
                 client.send(`{"msg":{"type":"action","args":{"position":"${vo.data.position}","material_id":${ma.id}},"action":"material_produce_v2"}}`)
                 await $.wait(5000);
-              } else {
-                ma = $.material.base[1]['items'][positionList.indexOf(vo.data.position)]
-                if (ma) {
-                  console.log(`else去生产${ma.name}`)
-                  client.send(`{"msg":{"type":"action","args":{"position":"${vo.data.position}","material_id":${ma.id}},"action":"material_produce_v2"}}`)
-                  await $.wait(5000);
-                }
               }
             }
             else{
