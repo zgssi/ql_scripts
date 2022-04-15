@@ -74,6 +74,8 @@ async function main() {
         $.changeReward = true;
         $.canOpenRed = true;
         await gambleHomePage();
+        await $.wait(2000);
+        await gambleHomePage(false);
         if ($.time == 0) {
             console.log(`开始进行翻翻乐拿红包\n`)
             await gambleOpenReward();//打开红包
@@ -97,7 +99,7 @@ async function main() {
 
 
 //查询剩余多长时间可进行翻翻乐
-function gambleHomePage() {
+function gambleHomePage(isred = true) {
     const headers = {
         'Host': 'api.m.jd.com',
         'Origin': 'https://doublejoy.jd.com',
@@ -109,7 +111,7 @@ function gambleHomePage() {
     }
     const body = { 'linkId': linkId, 'redEnvelopeId': '43e2bcf1111e45a896122be5f1b3698198431649983743661', 'inviter': 'fN6xG0sVcklWe_vecjX-xw', 'helpType': '1' };
     const options = {
-        url: `https://api.m.jd.com/?functionId=redEnvelopeInteractHome&body=${encodeURIComponent(JSON.stringify(body))}&t=${Date.now()}&appid=activities_platform&client=H5&clientVersion=1.0.0`,
+        url: `https://api.m.jd.com/?functionId=${isred ? 'redEnvelopeInteractHome' : 'openRedEnvelopeInteract'}&body=${encodeURIComponent(JSON.stringify(body))}&t=${Date.now()}&appid=activities_platform&client=H5&clientVersion=1.0.0`,
         headers,
     }
     return new Promise(resolve => {
@@ -121,15 +123,20 @@ function gambleHomePage() {
                 } else {
                     if (data) {
                         data = JSON.parse(data);
-                        if (data['code'] === 0) {
-                            if (data.data.leftTime === 0) {
-                                $.time = data.data.leftTime;
+                        if (isred) {
+                            if (data['code'] === 0) {
+                                if (data.data.leftTime === 0) {
+                                    $.time = data.data.leftTime;
+                                } else {
+                                    $.time = (data.data.gambleActLeftTime / (60 * 1000)).toFixed(2);
+                                }
+                                console.log(`\n查询下次翻翻乐剩余时间成功：\n京东账号【${$.UserName}】距开始剩 ${$.time} 分钟`);
                             } else {
-                                $.time = (data.data.gambleActLeftTime / (60 * 1000)).toFixed(2);
+                                console.log(`查询下次翻翻乐剩余时间失败：${JSON.stringify(data)}\n`);
                             }
-                            console.log(`\n查询下次翻翻乐剩余时间成功：\n京东账号【${$.UserName}】距开始剩 ${$.time} 分钟`);
-                        } else {
-                            console.log(`查询下次翻翻乐剩余时间失败：${JSON.stringify(data)}\n`);
+                        }
+                        else {
+                            // console.log(data)
                         }
                     }
                 }
