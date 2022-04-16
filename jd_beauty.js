@@ -21,6 +21,9 @@ function oc(fn, defaultVal) {
     return undefined
   }
 }
+function newSort(x,y){
+  return y.id-x.id;
+}
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -434,13 +437,13 @@ async function mr() {
                 continue
               }
               for (let material of product.product_materials) {
-                msg += `需要原料“${material.material.name}${material.num} 份” ` //material.num 需要材料数量
+                msg += `需要原料“${material.material.name}${material.num*need} 份” ` //material.num 需要材料数量
                 const ma = $.materials.filter(vo => vo.item_id === material.material_id)[0] //仓库里对应的材料信息
                 // console.log(`ma:${JSON.stringify(ma)}`);
                 if (ma) {
                   msg += `（库存 ${ma.num} 份）`;
                   num = Math.min(num, Math.trunc(ma.num / material.num)) ;//Math.trunc 取整数部分
-                  if(material.num > ma.num){need_material.push(material.material)};
+                  if(material.num*need > ma.num){need_material.push(material.material)};
                   // console.log(`num:${JSON.stringify(num)}`);
                 } else {
                   if(need_material.findIndex(vo=>vo.id===material.material.id)===-1)
@@ -466,7 +469,7 @@ async function mr() {
                 console.log(`【${product.name}】原料不足，无法生产`)
               }
             }
-            $.needs = need_material
+            $.needs = need_material.sort(newSort)
             // console.log(`product_lists $.needs:${JSON.stringify($.needs)}`);
             console.log(`=======================`)
           } else {
