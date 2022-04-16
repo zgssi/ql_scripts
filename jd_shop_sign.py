@@ -1,5 +1,5 @@
 """
-cron: 0 0 * * *
+cron: 0 0,23 * * *
 new Env('店铺签到');
 """
 
@@ -19,7 +19,7 @@ def log(*objects, sep=' ', end='\n', file=None, flush=False):
     print(*objects, sep=' ', end='\n', file=None, flush=True)
 
 
-# 读取cookies
+# 加载cookies
 cookies = []
 def getCookies():
     cookies_envs = get_envs("JD_COOKIE")
@@ -33,11 +33,11 @@ def getCookies():
     # random.shuffle(cookies)
     # 去重
     # cookies=set(cookies)
-    log('cookies读取成功！共{0}个'.format(len(cookies)))
+    log('cookies加载成功！共[{0}]个'.format(len(cookies)))
 getCookies()
 
 
-# 读取tokens
+# 加载tokens
 tokens = []
 token_env = {}
 def getTokens():
@@ -51,11 +51,24 @@ def getTokens():
         sys.exit()
     # 缓存变量便于修改
     token_env = tokens_envs[0]
+    log('本地tokens加载成功！共[{0}]个'.format(len(tokens)))
+
+    if time.localtime().tm_hour != 0:
+        log('非0点，开始同步其他大佬仓库脚本tokens')
+        urls = ['https://cdn.jsdelivr.net/gh/KingRan/KR@main/jd_dpqd.js',
+            'https://cdn.jsdelivr.net/gh/6dylan6/jdpro@main/jd_dpsign.js']
+        for url in urls:
+            log(url)
+            res = requests.get(url)
+            token_list = re.findall('"(\w{32})"', res.text)
+            tokens.extend(token_list)
+            log('远程tokens获取成功！共[{0}]个'.format(len(token_list)))
+
     # 随机排序
     # random.shuffle(tokens)
     # 去重
     tokens = set(tokens)
-    log('tokens读取成功！共{0}个'.format(len(tokens)))
+    log('tokens加载成功！共[{0}]个（去重后）'.format(len(tokens)))
 getTokens()
 
 
@@ -299,8 +312,9 @@ for i,cookie in enumerate(cookies):
                 # disable_env()
                 break
             elif msg == "当前不存在有效的活动!":
-                log("移除token")
-                tokens.remove(token)
+                if token in tokens:
+                    log("移除token")
+                    tokens.remove(token)
                 continue
             elif msg == "用户达到签到上限":
                 log("结束当前账号")
@@ -315,8 +329,8 @@ for i,cookie in enumerate(cookies):
 
 
 # 更新变量
-log("\n开始更新店铺token环境变量")
-msg = "有效店铺签到token{0}个".format(len(tokens))
+log("\n开始更新店铺签到环境变量")
+msg = "有效店铺签到token共[{0}]个".format(len(tokens))
 log(msg)
 b = put_envs(token_env.get('id'), token_env.get('name'), "&".join(tokens), msg)
 log("更新{0}！".format(b))
