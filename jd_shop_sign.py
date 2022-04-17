@@ -54,9 +54,15 @@ def getTokens():
     log('本地tokens加载成功！共[{0}]个'.format(len(tokens)))
 
     if time.localtime().tm_hour != 0:
-        log('非0点，开始同步其他大佬仓库脚本tokens')
+        log("非0点，开始同步其他大佬仓库脚本tokens")
+        log("环境变量:DPQDTK_URLS=url1&url2...")
+        log("没必要加太多，每日签到上限[21]个!")
         urls = ['https://cdn.jsdelivr.net/gh/KingRan/KR@main/jd_dpqd.js',
             'https://cdn.jsdelivr.net/gh/6dylan6/jdpro@main/jd_dpsign.js']
+        tokens_urls_envs = get_envs("DPQDTK_URLS")
+        for envs in tokens_urls_envs:
+            if envs.get('status') == 0:
+                urls.extend(envs.get('value').split('&'))
         for url in urls:
             log(url)
             res = requests.get(url)
@@ -172,7 +178,7 @@ def getActivityInfo(token):
             log(data)
             return 0,0,0
     except Exception as e:
-        log("获取活动信息错误：",e)
+        log("获取活动信息错误：", str(e))
         return 0,0,0
 
 
@@ -202,7 +208,7 @@ def getShopName(shopId):
         getShopNameDic[shopId] = shopName
         return shopName
     except Exception as e:
-        log("获取店铺名称错误：",e)
+        log("获取店铺名称错误：", str(e))
         return ""
 
 
@@ -237,7 +243,8 @@ def signCollectGift(cookie,token,activityId):
             # 返回主方法处理
             return data
     except Exception as e:
-        log("签到错误：",e)
+        log("签到错误：", str(e))
+        return None
 
 
 # 获取签到记录
@@ -265,7 +272,7 @@ def getSignRecord(cookie,token,shopId,activityId):
         if data["code"] == 200:
             log("已连续签到{0}天".format(data["data"]["days"]))
     except Exception as e:
-        log("获取签到记录错误：",e)
+        log("获取签到记录错误：", str(e))
 
 
 # 加载活动详情
@@ -295,7 +302,9 @@ for i,cookie in enumerate(cookies):
         # 签到
         # time.sleep(1)
         data = signCollectGift(cookie,token,activityId)
-        if data["code"] == 200:
+        if data is None:
+            continue
+        elif data["code"] == 200:
             log("签到成功")
             for item in data["data"]:
                 for prize in item["prizeList"]:
