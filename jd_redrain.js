@@ -1,6 +1,6 @@
 /*
 整点京豆雨
-1 * * * * jd_super_redrain.js
+cron 1 * * * * jd_super_redrain.js
 */
 const $ = new Env('整点京豆雨');
 const notify = $.isNode() ? require('./sendNotify') : '';
