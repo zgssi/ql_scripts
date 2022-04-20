@@ -113,7 +113,7 @@ async function getInfo(url) {
 // 签到
 async function doInteractiveAssignment(encryptProjectId, AssignmentId) {
   return new Promise(async (resolve) => {
-    $.post(taskUrl("doInteractiveAssignment", { "encryptProjectId": encryptProjectId, "encryptAssignmentId": AssignmentId, "sourceCode": "aceaceqingzhan", "itemId": "1", "actionType": "", "completionFlag": "true", "ext": {} }), async (err, resp, data) => {
+    $.post(taskUrl("doInteractiveAssignment", { "encryptProjectId": encryptProjectId, "encryptAssignmentId": AssignmentId, "sourceCode": "acetttsign", "itemId": "1", "actionType": "", "completionFlag": "true", "ext": {} }), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
