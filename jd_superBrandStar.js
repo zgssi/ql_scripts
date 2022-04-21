@@ -1,7 +1,7 @@
 /**
- 明星送好礼
- cron "18 0,12 * * *"
- by 小手
+ * 明星送好礼
+ * cron "18 0,12 * * *"
+ * by 小手
  */
 const $ = new Env('明星送好礼');
 const notify = $.isNode() ? require('./sendNotify') : '';

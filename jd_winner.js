@@ -10,13 +10,13 @@
 
 ================Loon==============
 [Script]
-cron "20 0,6,12" script-path=https://raw.githubusercontent.com/zspro/ql_scripts/main/jd_winner.js,tag=发财大赢家-翻翻乐
+cron "20 0,6,12 * * *" script-path=https://raw.githubusercontent.com/zspro/ql_scripts/main/jd_winner.js,tag=发财大赢家-翻翻乐
 
 ===============Surge=================
-发财大赢家-翻翻乐 = type=cron,cronexp="20 0,6,12",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/zspro/ql_scripts/main/jd_winner.js
+发财大赢家-翻翻乐 = type=cron,cronexp="20 0,6,12 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/zspro/ql_scripts/main/jd_winner.js
 
 ============小火箭=========
-发财大赢家-翻翻乐 = type=cron,script-path=https://raw.githubusercontent.com/zspro/ql_scripts/main/jd_winner.js, cronexpr="20 0,6,12", timeout=3600, enable=true
+发财大赢家-翻翻乐 = type=cron,script-path=https://raw.githubusercontent.com/zspro/ql_scripts/main/jd_winner.js, cronexpr="20 0,6,12 * * *", timeout=3600, enable=true
  */
 const $ = new Env('发财大赢家-翻翻乐');
 const notify = $.isNode() ? require('./sendNotify') : '';
