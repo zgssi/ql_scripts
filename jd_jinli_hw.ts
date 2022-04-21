@@ -1,6 +1,6 @@
 /**
  * 京东-锦鲤红包
- * 只做CK1
+ * 6点后做全部CK
  * cron: 2 0,1,6 * * *
  * CK1     HW.ts -> 内部
  * CK2～n  内部   -> HW.ts
@@ -15,15 +15,17 @@ let shareCodesSelf: string[] = [], shareCodes: string[] = [], shareCodesHW: stri
 let min: number[] = [0.02, 0.12, 0.3, 0.4, 0.6, 0.7, 0.8, 1, 1.2, 2, 3.6], log: string
 
 !(async () => {
-    let cookiesArrCache = await requireConfig(false)
-    cookiesArr = cookiesArrCache.slice(0, 1)
+    cookiesArr = await requireConfig(false)
+    cookiesArr = cookiesArr.slice(0, 1)
     await join()
-    await getShareCodeSelf()
-
-    cookiesArr = cookiesArrCache.slice(1, 99)
     await help()
 
-    cookiesArr = cookiesArrCache.slice(0, 1)
+    cookiesArr = await requireConfig(false)
+    cookiesArr = cookiesArr.slice(0, 9)
+    if (new Date().getHours() !== 6)
+        await join()
+    await getShareCodeSelf()
+    await help()
     await open(1)
 })()
 
@@ -33,7 +35,7 @@ async function join() {
             cookie = value
             UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
             console.log(`\n开始【京东账号${index + 1}】${UserName}\n`)
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) {
                 try {
                     log = await getLog()
                     res = await api('h5launch', { followShop: 0, random: log.match(/"random":"(\d+)"/)[1], log: log.match(/"log":"(.*)"/)[1], sceneid: 'JLHBhPageh5' })
@@ -131,27 +133,29 @@ async function help() {
                 shareCodes = Array.from(new Set([...shareCodesSelf, ...shareCodesHW]))
             }
 
-            let me: string = await getShareCodeSelf(true)
-            let success: boolean = false
+            let me: string = await getShareCodeSelf(true), remain: boolean = true
             for (let code of shareCodes) {
-                if (success) break
+                if (!remain) break
+                let success: boolean = false
                 if (!fullCode.includes(code) && code !== me) {
                     console.log(`账号${index + 1} ${UserName} 去助力 ${code} ${shareCodesSelf.includes(code) ? '*内部*' : ''}`)
                     for (let i = 0; i < 5; i++) {
+                        if (success) break
                         log = await getLog()
                         res = await api('jinli_h5assist', { "redPacketId": code, "followShop": 0, random: log.match(/"random":"(\d+)"/)[1], log: log.match(/"log":"(.*)"/)[1], sceneid: 'JLHBhPageh5' })
                         if (res.rtn_code === 403) {
                             console.log('log error')
                             await wait(5000)
                         } else {
+                            success = true
                             if (res.data.result.status === 0) {
                                 console.log('助力成功：', parseFloat(res.data.result.assistReward.discount))
-                                success = true
                                 await wait(45000)
+                                remain = false
                                 break
                             } else if (res.data.result.status === 3) {
                                 console.log('今日助力次数已满')
-                                success = true
+                                remain = false
                                 await wait(45000)
                                 break
                             } else {
