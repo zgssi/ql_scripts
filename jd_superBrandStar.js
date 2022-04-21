@@ -1,6 +1,6 @@
 /**
  * 明星送好礼
- * cron "18 0,12 * * *"
+ * cron "18 0,12 * * *" jd_superBrandStar.js
  * by 小手
  */
 const $ = new Env('明星送好礼');
