@@ -4,6 +4,7 @@
  * cron: 2 0,1,6 * * *
  * CK1     HW.ts -> 内部
  * CK2～n  内部   -> HW.ts
+ * new Env('锦鲤红包');
  */
 
 import axios from 'axios'
