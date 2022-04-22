@@ -3,6 +3,7 @@
  * CK1     HW.ts -> 内部
  * CK2～n  内部   -> HW.ts
  * new Env('发财挖宝');
+ * 只助力ck1
  */
 
 import axios from 'axios'
@@ -23,7 +24,7 @@ let shareCodes: INVITE[] = [], shareCodesHW = [], shareCodesSelf: INVITE[] = []
     let cookiesArr: string[] = await requireConfig()
 
     // 获取助力码
-    for (let [index, value] of cookiesArr.entries()) {
+    for (let [index, value] of cookiesArr.slice(0, 1).entries()) {
         try {
             cookie = value
             UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
