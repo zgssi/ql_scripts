@@ -1,6 +1,7 @@
 /**
- * 农场自动收+种4/3/2级
- * cron: 1 0,1,2 * * *
+ * 农场自动收+种4级
+ * cron: 0 0 * * *
+ * new Env('农场自动收+种4级')
  */
 
 import USER_AGENT, { o2s, requireConfig, wait } from "./TS_USER_AGENTS"
@@ -33,14 +34,14 @@ let cookie: string = '', UserName: string, res: any
     }
     if (res.farmUserPro.treeState === 3) {
       let element = res.farmLevelWinGoods[4][0];
-      if (!element) {
-        console.log('4级不可种，降为3级')
-        element = res.farmLevelWinGoods[3][0];
-      }
-      if (!element) {
-        console.log('3级不可种，降为2级')
-        element = res.farmLevelWinGoods[2][0];
-      }
+      // if (!element) {
+      //   console.log('4级不可种，降为3级')
+      //   element = res.farmLevelWinGoods[3][0];
+      // }
+      // if (!element) {
+      //   console.log('3级不可种，降为2级')
+      //   element = res.farmLevelWinGoods[2][0];
+      // }
       res = await api('choiceGoodsForFarm', { "imageUrl": '', "nickName": '', "shareCode": '', "goodsType": element.type, "type": "0", "version": 11, "channel": 3, "babelChannel": 0 });
       o2s(res)
       await api('gotStageAwardForFarm', { "type": "4", "version": 11, "channel": 3, "babelChannel": 0 });
