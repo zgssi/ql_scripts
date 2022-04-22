@@ -16,17 +16,16 @@ let shareCodesSelf: string[] = [], shareCodes: string[] = [], shareCodesHW: stri
 let min: number[] = [0.02, 0.12, 0.3, 0.4, 0.6, 0.7, 0.8, 1, 1.2, 2, 3.6], log: string
 
 !(async () => {
-    cookiesArr = await requireConfig(false)
-    cookiesArr = cookiesArr.slice(0, 1)
+    let cookiesArrCache = await requireConfig(false)
+
+    cookiesArr = cookiesArrCache.slice(0, 1)
     await join()
+    await getShareCodeSelf()
+
+    cookiesArr = cookiesArrCache.slice(1, 99)
     await help()
 
-    cookiesArr = await requireConfig(false)
-    cookiesArr = cookiesArr.slice(0, 9)
-    if (new Date().getHours() !== 6)
-        await join()
-    await getShareCodeSelf()
-    await help()
+    cookiesArr = cookiesArrCache.slice(0, 1)
     await open(1)
 })()
 
@@ -40,9 +39,12 @@ async function join() {
                 try {
                     log = await getLog()
                     res = await api('h5launch', { followShop: 0, random: log.match(/"random":"(\d+)"/)[1], log: log.match(/"log":"(.*)"/)[1], sceneid: 'JLHBhPageh5' })
-                    console.log('活动初始化：', res.data.result.statusDesc)
                     if (res.rtn_code !== 403) {
+                        console.log('活动初始化：', res.data.result.statusDesc)
                         break
+                    }
+                    else {
+                        console.log('403,重试...')
                     }
                 } catch (e) {
                     console.log('log error', e)
@@ -74,7 +76,7 @@ async function getShareCodeSelf(one: boolean = false) {
             }
             await wait(1000)
         }
-        o2s(shareCodesSelf)
+        // o2s(shareCodesSelf)
     }
 }
 
@@ -139,13 +141,13 @@ async function help() {
                 if (!remain) break
                 let success: boolean = false
                 if (!fullCode.includes(code) && code !== me) {
-                    console.log(`账号${index + 1} ${UserName} 去助力 ${code} ${shareCodesSelf.includes(code) ? '*内部*' : ''}`)
+                    console.log(`\n账号${index + 1} ${UserName} 去助力 ${code} ${shareCodesSelf.includes(code) ? '*内部*' : ''}\n`)
                     for (let i = 0; i < 5; i++) {
                         if (success) break
                         log = await getLog()
                         res = await api('jinli_h5assist', { "redPacketId": code, "followShop": 0, random: log.match(/"random":"(\d+)"/)[1], log: log.match(/"log":"(.*)"/)[1], sceneid: 'JLHBhPageh5' })
                         if (res.rtn_code === 403) {
-                            console.log('log error')
+                            console.log('403,重试...')
                             await wait(5000)
                         } else {
                             success = true
