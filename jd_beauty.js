@@ -4,7 +4,7 @@
 https://raw.githubusercontent.com/aTenb/jdOpenSharePicker/master/jd_beautyStudy.js
 更新时间:2021-12-03
 活动入口：京东app首页-美妆馆-底部中间按钮
-cron "20 6-23/4 * * *" jd_beautyStudy.js, tag=美丽研究院, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+cron "20 6-23/5 * * *" jd_beautyStudy.js, tag=美丽研究院, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
  */
 const $ = new Env('美丽研究院');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -165,6 +165,10 @@ async function mr() {
       await $.wait(10000);
     }
     console.log(`\n========生产任务相关========`)
+    for (let help of helpInfo) {
+      client.send(help);
+    }
+    await $.wait(20000);
     client.send(`{"msg":{"type":"action","args":{},"action":"get_produce_material"}}`)
     await $.wait(20000);
     // 获得正在生产的商品信息
@@ -205,7 +209,7 @@ async function mr() {
     $.init = true;
     $.hasDone = true;
     for (let i = 0; i < $.pos.length && i < $.tokens.length; ++i) {
-      $.helpInfo.push(`{"msg":{"type":"action","args":{"inviter_id":"${$.userInfo.id}","position":"${$.pos[i]}","token":"${$.tokens[i]}"},"action":"employee"}}`)
+      $.helpInfo.push(`{"msg":{"type":"action","args":{"inviter_id":"${$.userInfo.id}","position":"${$.pos[i]}","token":"${$.tokens[i]}"},"action":"employee_v2"}}`)
     }
   };
   client.onmessage = async function (e) {
@@ -550,8 +554,9 @@ async function mr() {
           break
         case "to_exchange":
           if(oc(() => vo.data.coins)){
-            console.log(`兑换${vo.data.coins/-1000}京豆成功`)
+            console.log(`兑换${vo.data.coins/-10000}京豆成功`)
           }else{
+            console.log(vo)
             console.log(`兑换京豆失败`)
           }
           break
@@ -566,7 +571,7 @@ async function mr() {
             console.log(`not exist:${oc(() => vo.data)}`)
           }
           break
-        case "employee":
+        case "employee_v2":
           console.log(`${vo.msg}`)
           break
       }
