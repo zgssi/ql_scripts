@@ -1,11 +1,11 @@
 /*
-小鸽有礼 - 每日抽奖
+小哥有礼 - 每日抽奖
 活动入口：京东首页搜索 边玩边赚
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ===================quantumultx================
 [task_local]
 #每日抽奖
-13 1,22,23 * * * jd_daily_lottery.js, tag=每日抽奖, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+13 0,6,12 * * * jd_daily_lottery.js, tag=每日抽奖, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 =====================Loon================
 [Script]
@@ -17,7 +17,7 @@ cron "13 1,22,23 * * *" script-path=jd_daily_lottery.js, tag=每日抽奖
 ============小火箭=========
 每日抽奖 = type=cron,script-path=jd_daily_lottery.js, cronexpr="13 1,22,23 * * *", timeout=3600, enable=true
 */
-const $ = new Env('小鸽有礼-每日抽奖');
+const $ = new Env('小哥有礼-每日抽奖');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let activityType = '';
