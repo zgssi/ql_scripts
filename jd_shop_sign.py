@@ -96,6 +96,13 @@ def prize_dic(prize):
         return "[{0}]豆豆".format(prize_discount)
     elif prize_type == 6:# 积分
         return "[{0}]积分".format(prize_discount)
+    elif prize_type == 9:# 实物
+        for sku in prize["interactPrizeSkuList"]:
+            log("实物：{0}".format(sku["skuName"]))
+            log("促销价格：{0}".format(sku["promoPrice"]))
+            log("京东价格：{0}".format(sku["jdPrice"]))
+            log("数量：{0}".format(sku["perMaxNum"]))
+        return "[{0}]实物".format(prize_discount)
     elif prize_type == 14:# 红包
         return "[{0}]红包".format(prize_discount / 100)
     else:# 未知
@@ -203,7 +210,10 @@ def getShopName(shopId):
         # log(res.text)
 
         data = json.loads(res.text)
-        shopName = data["shopName"]
+        if "shopName" in data:
+            shopName = data["shopName"]
+        else:
+            shopName = ""
         getShopNameDic[shopId] = shopName
         return shopName
     except Exception as e:
