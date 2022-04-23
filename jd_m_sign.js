@@ -81,7 +81,8 @@ async function jdsign() {
     await $.wait(2000)
     await getInfo("https://prodev.m.jd.com/mall/active/hPJiMgUQmc34bamrApLUBRUy82W/index.html");//3.31结束   
     await $.wait(2000)
-    await getInfo("https://prodev.m.jd.com/mall/active/2FzVtkSfUtvU8YoiTeALkJ68PxAs/index.html");//医疗馆 12.31结束	
+    // await getInfo("https://prodev.m.jd.com/mall/active/2FzVtkSfUtvU8YoiTeALkJ68PxAs/index.html");//医疗馆 12.31结束	
+    // await $.wait(2000)
   } catch (e) {
     $.logErr(e)
   }
