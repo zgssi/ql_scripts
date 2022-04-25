@@ -103,6 +103,8 @@ def prize_dic(prize):
             log("京东价格：{0}".format(sku["jdPrice"]))
             log("数量：{0}".format(sku["perMaxNum"]))
         return "[{0}]实物".format(prize_discount)
+    elif prize_type == 10:# E卡
+        return "[{0}]E卡".format(prize_discount)
     elif prize_type == 14:# 红包
         return "[{0}]红包".format(prize_discount / 100)
     else:# 未知
@@ -164,16 +166,16 @@ def getActivityInfo(token):
                 gifts = []
                 for prize in item["prizeList"]:
                     gifts.append(prize_dic(prize))
-                    if prize["type"] == 4 or prize["type"] == 14:#豆豆 或 红包
-                        discount += int(prize["discount"])
+                    if prize["type"] == 4 or prize["type"] == 14 or prize["type"] == 10:#豆豆 或 红包 或 E卡
+                        discount += int(prize["discount"]) * (100 if prize["type"] == 10 else 1)
                 log("日签{0}天可领取：{1}".format(item["level"],gifts))
             maxLevel = 1
             for item in data["data"]["continuePrizeRuleList"]:
                 gifts = []
                 for prize in item["prizeList"]:
                     gifts.append(prize_dic(prize))
-                    if prize["type"] == 4 or prize["type"] == 14:#豆豆 或 红包
-                        discount += int(prize["discount"])
+                    if prize["type"] == 4 or prize["type"] == 14 or prize["type"] == 10:#豆豆 或 红包 或 E卡
+                        discount += int(prize["discount"]) * (100 if prize["type"] == 10 else 1)
                         maxLevel = item["level"]
                 log("连签{0}天可领取：{1}".format(item["level"],gifts))
             dayRate = round(discount / maxLevel,2)

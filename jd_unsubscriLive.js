@@ -174,7 +174,7 @@ function GetRawFollowAuthor() {
             let userInfo = {}, users = []
             try {
                 data = JSON.parse(getStr(data, 'jsonpCBKB(', ');'));
-                if (data.iRet === 0) {
+                if (data && data.iRet === 0) {
                     for (let i = 0; i < data['data']['LiveIng'].length; i++) {
                         users.push({ 'authorId': data['data']['LiveIng'][i]['authorId'], 'userName': data['data']['LiveIng'][i]['userName'] })
                     }

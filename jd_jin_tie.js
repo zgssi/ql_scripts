@@ -70,7 +70,7 @@ if ($.isNode()) {
 async function main() {
     try {
         await channelUserSignInfo_xh();
-        await queryMission_xh();
+        // await queryMission_xh();
         await channelUserSubsidyInfo_xh();
     } catch (e) {
         $.logErr(e)
@@ -468,7 +468,7 @@ function channelUserSubsidyInfo_xh() {
                     data = JSON.parse(data);
                     if (data.resultCode === 0) {
                         if (data.resultData.code === '000') {
-                            console.log(`\n京东账号${$.index} ${$.nickName || $.UserName} 当前总金贴：${data.resultData.data.availableAmount}元`)
+                            console.log(`京东账号${$.index} ${$.nickName || $.UserName} 当前总金贴：${data.resultData.data.availableAmount}元\n`)
                         } else {
                             console.log('获取当前总金贴失败', data)
                         }

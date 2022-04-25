@@ -93,6 +93,7 @@ function userSignIn() {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
+            console.log(data)
             data = JSON.parse(data);
             if (data.code === 1) {
               console.log(`今日签到成功，获得${data.content[0].title}`)
