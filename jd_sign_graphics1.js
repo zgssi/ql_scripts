@@ -28,11 +28,16 @@ let signFlag = false
 let successNum = 0
 let errorNum = 0
 let JD_API_HOST = 'https://sendbeans.jd.com'
+//活动地址:https://sendbeans.jd.com/jump/index/#/taro/pages/turncard/index?turnTableId=1401&shopId=1000283022
 const turnTableId = [
-    // { "name": "歌德老酒行", "id": 293, "shopid": 30284, "url": "https://sendbeans.jd.com/jump/index/" },//结束
-    // { "name": "自然堂", "id": 1162, "shopid": 56178, "url": "https://sendbeans.jd.com/jump/index/" },//结束
+    // { "name": "歌德老酒行", "id": 293, "shopid": 30284, "url": "https://sendbeans.jd.com/jump/index/" },
     { "name": "小米", "id": 1082, "shopid": 1000004123, "url": "https://sendbeans.jd.com/jump/index/" },
-    //活动地址:https://sendbeans.jd.com/jump/index/#/taro/pages/turncard/index?turnTableId=1401&shopId=1000283022
+    // { "name": "自然堂", "id": 1162, "shopid": 56178, "url": "https://sendbeans.jd.com/jump/index/" },
+    // { "name": "珀莱雅", "id": 1307, "shopid": 1000002743, "url": "https://sendbeans.jd.com/jump/index/" },
+    // { "name": "周六福珠宝", "id": 1316, "shopid": 1000075555, "url": "https://sendbeans.jd.com/jump/index/" },
+    { "name": "天章", "id": 1345, "shopid": 1000000142, "url": "https://sendbeans.jd.com/jump/index/" },
+    // { "name": "英氏", "id": 1349, "shopid": 12137, "url": "https://sendbeans.jd.com/jump/index/" },
+    { "name": "星巴克家享咖啡", "id": 1355, "shopid": 1000225742, "url": "https://sendbeans.jd.com/jump/index/" },
     { "name": "colorkey", "id": 1401, "shopid": 1000283022, "url": "https://sendbeans.jd.com/jump/index/" },
 ]
 
