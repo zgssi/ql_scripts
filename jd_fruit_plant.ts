@@ -7,7 +7,7 @@
 import USER_AGENT, { o2s, requireConfig, wait } from "./TS_USER_AGENTS"
 import axios from "axios";
 
-let cookie: string = '', UserName: string, res: any
+let cookie: string = '', UserName: string, res: any, element
 
 !(async () => {
   let cookiesArr: string[] = await requireConfig(true)
@@ -17,31 +17,39 @@ let cookie: string = '', UserName: string, res: any
     console.log(`\n开始【京东账号${index + 1}】${UserName}\n`)
 
     res = await api('initForFarm', { "version": 11, "channel": 3, "babelChannel": 0 })
-    if (!res.farmUserPro) {
-      console.log(res)
+    if (res.code !== '0') {
       console.log('貌似火爆了，跳过！')
+      console.log(res)
       continue
     }
-    if (![2, 3].includes(res.farmUserPro.treeState)) {
-      console.log('正在种植...')
-    }
-    if (res.farmUserPro.treeState === 2) {
-      res = await api('gotCouponForFarm', { "version": 11, "channel": 3, "babelChannel": 0 })
-      if (res.code !== '0') {
-        console.log('收获失败：', res.message)
+    if (res.farmUserPro) {
+      if (![2, 3].includes(res.farmUserPro.treeState)) {
+        console.log('正在种植...')
       }
-      res = await api('initForFarm', { "version": 11, "channel": 3, "babelChannel": 0 })
+      if (res.farmUserPro.treeState === 2) {
+        res = await api('gotCouponForFarm', { "version": 11, "channel": 3, "babelChannel": 0 })
+        if (res.code !== '0') {
+          console.log('收获失败：', res.message)
+        }
+        res = await api('initForFarm', { "version": 11, "channel": 3, "babelChannel": 0 })
+      }
+      if (res.farmUserPro.treeState === 3) {
+        element = res.farmLevelWinGoods[4][0];
+        // if (!element) {
+        //   console.log('4级不可种，降为3级')
+        //   element = res.farmLevelWinGoods[3][0];
+        // }
+        // if (!element) {
+        //   console.log('3级不可种，降为2级')
+        //   element = res.farmLevelWinGoods[2][0];
+        // }
+      }
     }
-    if (res.farmUserPro.treeState === 3) {
-      let element = res.farmLevelWinGoods[4][0];
-      // if (!element) {
-      //   console.log('4级不可种，降为3级')
-      //   element = res.farmLevelWinGoods[3][0];
-      // }
-      // if (!element) {
-      //   console.log('3级不可种，降为2级')
-      //   element = res.farmLevelWinGoods[2][0];
-      // }
+    else {
+      console.log('貌似新用户未种植，尝试去种植...')
+      element = res.farmWinGoods[0];
+    }
+    if (element) {
       res = await api('choiceGoodsForFarm', { "imageUrl": '', "nickName": '', "shareCode": '', "goodsType": element.type, "type": "0", "version": 11, "channel": 3, "babelChannel": 0 });
       o2s(res)
       await api('gotStageAwardForFarm', { "type": "4", "version": 11, "channel": 3, "babelChannel": 0 });
