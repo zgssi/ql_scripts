@@ -7,26 +7,29 @@
  * new Env('锦鲤红包');
  */
 
-import axios from 'axios'
 import { sendNotify } from './sendNotify'
-import { get, getshareCodeHW, o2s, requireConfig, wait } from "./TS_USER_AGENTS"
+import * as dotenv from 'dotenv'
+import { get, post, getshareCodeHW, o2s, requireConfig, wait } from "./TS_USER_AGENTS"
 
+let PandaToken: string = process.env.PandaToken || ''
 let cookie: string, cookiesArr: string[] = [], res: any, UserName: string
+let ua: string = "Mozilla/5.0 (Linux; U; Android 8.0.0; zh-cn; Mi Note 2 Build/OPR1.170623.032) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/61.0.3163.128 Mobile Safari/537.36 XiaoMi/MiuiBrowser/10.1.1"
 let shareCodesSelf: string[] = [], shareCodes: string[] = [], shareCodesHW: string[] = [], fullCode: string[] = []
 let min: number[] = [0.02, 0.03, 0.12, 0.3, 0.4, 0.6, 0.7, 0.8, 1, 1.2, 2, 3.6], log: string
 
 !(async () => {
+    dotenv.config()
     let cookiesArrCache = await requireConfig(false)
-
-    cookiesArr = cookiesArrCache.slice(0, 1)
+    let top = 99
+    cookiesArr = cookiesArrCache.slice(0, top)
     await join()
     await getShareCodeSelf()
 
-    cookiesArr = cookiesArrCache.slice(1, 99)
+    cookiesArr = cookiesArrCache.slice(0, 99)
     await help()
 
-    cookiesArr = cookiesArrCache.slice(0, 1)
-    await open(1)
+    cookiesArr = cookiesArrCache.slice(0, top)
+    await open(0)
 })()
 
 async function join() {
@@ -44,7 +47,7 @@ async function join() {
                         break
                     }
                     else {
-                        console.log('403,重试...')
+                        console.log('403,retry...')
                     }
                 } catch (e) {
                     console.log('log error', e)
@@ -69,8 +72,13 @@ async function getShareCodeSelf(one: boolean = false) {
                 UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
                 console.log(`\n开始【京东账号${index + 1}】${UserName}\n`)
                 res = await api('h5activityIndex', { "isjdapp": 1 })
-                console.log('ID：', res.data.result.redpacketInfo.id)
-                shareCodesSelf.push(res.data.result.redpacketInfo.id)
+                if (res.data.result.redpacketInfo) {
+                    console.log('ID：', res.data.result.redpacketInfo.id)
+                    shareCodesSelf.push(res.data.result.redpacketInfo.id)
+                }
+                else {
+                    console.log('no sharecode')
+                }
             } catch (e) {
                 console.log('getShareCodeSelf error', e)
             }
@@ -180,25 +188,37 @@ async function help() {
 }
 
 async function api(fn: string, body: object) {
-    let { data } = await axios.post(`https://api.m.jd.com/api?appid=jinlihongbao&functionId=${fn}&loginType=2&client=jinlihongbao&clientVersion=10.2.4&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`, `body=${encodeURIComponent(JSON.stringify(body))}`, {
-        headers: {
-            "origin": "https://h5.m.jd.com",
-            "referer": "https://h5.m.jd.com/babelDiy/Zeus/2NUvze9e1uWf4amBhe1AV6ynmSuH/index.html",
-            'Content-Type': 'application/x-www-form-urlencoded',
-            "X-Requested-With": "com.jingdong.app.mall",
-            "User-Agent": "Mozilla/5.0 (Linux; U; Android 8.0.0; zh-cn; Mi Note 2 Build/OPR1.170623.032) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/61.0.3163.128 Mobile Safari/537.36 XiaoMi/MiuiBrowser/10.1.1",
-            "Cookie": cookie,
-        }
+    return await post(`https://api.m.jd.com/api?appid=jinlihongbao&functionId=${fn}&loginType=2&client=jinlihongbao&clientVersion=10.2.4&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`, `body=${encodeURIComponent(JSON.stringify(body))}`, {
+        "origin": "https://h5.m.jd.com",
+        "referer": "https://h5.m.jd.com/babelDiy/Zeus/2NUvze9e1uWf4amBhe1AV6ynmSuH/index.html",
+        'Content-Type': 'application/x-www-form-urlencoded',
+        "X-Requested-With": "com.jingdong.app.mall",
+        "User-Agent": ua,
+        "Cookie": cookie,
     })
-    return data
 }
 
 async function getLog() {
-    let data = await get(`https://api.jdsharecode.xyz/api/jlhb`)
-    if (data !== 1 && data !== '1') {
-        return data
-    } else {
-        console.log('No log')
-        process.exit(0)
+    if (!PandaToken) {
+        let data = await get(`https://api.jdsharecode.xyz/api/jlhb`)
+        if (data !== 1 && data !== '1') {
+            console.log('HW log')
+            return data
+        } else {
+            console.log('HW No log')
+            process.exit(0)
+        }
+    }
+    else {
+        let data = await get(`https://api.jds.codes/jd/log`, '', { 'Authorization': 'Bearer ' + PandaToken })
+        if (data && data.code === 200) {
+            console.log('Panda log')
+            data.data.random = data.data.random.toString()
+            return JSON.stringify(data)
+        }
+        else {
+            console.log('Panda No log')
+            process.exit(0)
+        }
     }
 }
