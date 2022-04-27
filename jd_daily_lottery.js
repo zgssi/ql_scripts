@@ -250,12 +250,15 @@ function dealReturn(functionId, data) {
       break;
     case 'createInvitation':
       if (data.success === true) {
-        $.helpCodeList.push({
+        helpCode = {
           'use': $.UserName,
           'helpCpde': data.data,
           'needHelp': $.missionInfo['totalNum'] - $.missionInfo['completeNum']
-        });
-        console.log(`互助码(内部多账号自己互助)：${data.data}`);
+        }
+        if(!$.helpCodeList.includes(helpCode)){
+          $.helpCodeList.push(helpCode);
+          console.log(`互助码(内部多账号自己互助)：${data.data}`);
+        }
       }
       break;
     case 'helpFriend':
