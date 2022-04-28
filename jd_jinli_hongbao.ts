@@ -199,25 +199,27 @@ async function api(fn: string, body: object) {
 }
 
 async function getLog() {
-    if (!PandaToken) {
-        let data = await get(`https://api.jdsharecode.xyz/api/jlhb`)
-        if (data !== 1 && data !== '1') {
-            console.log('HW log')
-            return data
-        } else {
-            console.log('HW No log')
-            process.exit(0)
-        }
-    }
-    else {
-        let data = await get(`https://api.jds.codes/jd/log`, '', { 'Authorization': 'Bearer ' + PandaToken })
-        if (data && data.code === 200) {
-            console.log('Panda log')
-            data.data.random = data.data.random.toString()
-            return JSON.stringify(data)
+    let data = await get(`https://api.jdsharecode.xyz/api/jlhb`)
+    if (data !== 1 && data !== '1') {
+        console.log('HW log')
+        return data
+    } else {
+        if (PandaToken) {
+            let data = await get(`https://api.jds.codes/jd/log`, '', { 'Authorization': 'Bearer ' + PandaToken })
+            if (data && data.code === 200) {
+                console.log('Panda log')
+                data.data.random = data.data.random.toString()
+                return JSON.stringify(data)
+            }
+            else {
+                console.log('HW No log')
+                console.log('Panda No log')
+                process.exit(0)
+            }
         }
         else {
-            console.log('Panda No log')
+            console.log('HW No log')
+            console.log('No PandaToken')
             process.exit(0)
         }
     }
