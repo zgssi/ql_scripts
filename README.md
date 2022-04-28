@@ -8,6 +8,11 @@ ql repo https://github.com/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|
 ql repo https://hub.gitfast.tk/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|utils" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|JDSignValidator|JDJRValidator_Aaron|sign_graphics_validate|utils"
 ```
 
+## 青龙配置文件
+```
+RepoFileExtensions="js py ts"
+```
+
 ## 特别声明:
 
 * 本仓库涉仅用于测试和学习研究，禁止用于商业用途，不能保证其合法性，准确性，完整性和有效性，请根据情况自行判断.
