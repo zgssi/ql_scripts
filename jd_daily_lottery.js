@@ -255,7 +255,7 @@ function dealReturn(functionId, data) {
           'helpCpde': data.data,
           'needHelp': $.missionInfo['totalNum'] - $.missionInfo['completeNum']
         }
-        if($.helpCodeList.indexOf(helpCode) < 0){
+        if($.helpCodeList.findIndex(o => o.helpCpde == data.data) < 0){
           $.helpCodeList.push(helpCode);
           console.log(`互助码(内部多账号自己互助)：${data.data}`);
         }
