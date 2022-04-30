@@ -598,7 +598,7 @@ function pigPetLotteryPlay() {
                   } else {
                     console.log(`大转盘抽奖结果：没抽中，再接再励哦～\n`)
                   }
-                  $.currentCount = data.resultData.resultData.currentCount;//抽奖后剩余的抽奖次数
+                  // $.currentCount = data.resultData.resultData.currentCount;//抽奖后剩余的抽奖次数
                 }
               } else {
                 console.log(`其他情况：${JSON.stringify(data)}`)
