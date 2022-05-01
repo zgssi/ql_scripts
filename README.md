@@ -10,7 +10,7 @@ ql repo https://hub.gitfast.tk/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "bac
 
 ## 青龙配置文件
 ```
-RepoFileExtensions="js py ts"
+RepoFileExtensions="js py ts so"
 ```
 
 ## 特别声明:
