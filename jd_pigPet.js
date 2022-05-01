@@ -135,6 +135,10 @@ async function pigPetLottery() {
     for (let i = 0; i < $.currentCount; i++) {
       await pigPetLotteryPlay();
       await $.wait(5000);
+      if(i + 1 == $.currentCount){
+        i = 0
+        await pigPetLotteryIndex()
+      }
     }
   }
 }

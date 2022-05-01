@@ -94,7 +94,7 @@ def get_succeedinfo(ck):
     'User-Agent':UserAgent,
     'referer':'https://prodev.m.jd.com/',
     'accept-encoding':'gzip, deflate, br',
-    'cookie':ck
+    'cookie':ck+"__jda=1.1.1.1.1;"
 	    }    
     data=f'appid=newtry&functionId=try_MyTrials&uuid={uuid}&clientVersion={clientVersion}&client=wh5&osVersion={iosVer}&area={area}&networkType=wifi&body=%7B%22page%22%3A1%2C%22selected%22%3A2%2C%22previewTime%22%3A%22%22%7D'
     response=requests.post(url=url,headers=headers,data=data)
