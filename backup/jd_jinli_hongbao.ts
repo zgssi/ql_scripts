@@ -7,9 +7,9 @@
  * new Env('锦鲤红包');
  */
 
-import { sendNotify } from './sendNotify'
+import { sendNotify } from '../sendNotify'
 import * as dotenv from 'dotenv'
-import { get, post, getshareCodeHW, o2s, requireConfig, wait } from "./TS_USER_AGENTS"
+import { get, post, getshareCodeHW, o2s, requireConfig, wait } from "../TS_USER_AGENTS"
 
 let PandaToken: string = process.env.PandaToken || ''
 let cookie: string, cookiesArr: string[] = [], res: any, UserName: string
