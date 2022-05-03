@@ -1,7 +1,7 @@
 /**
  特务Z
  脚本没有自动开卡，会尝试领取开卡奖励
- cron 12 20,21 * * * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_productZ4Brand.js
+ cron 12 19,21 * * * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_productZ4Brand.js
  一天要跑2次
  */
 const $ = new Env('特务Z');

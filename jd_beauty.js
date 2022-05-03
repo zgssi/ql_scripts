@@ -42,7 +42,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     $.msg($.name, 'iOS端不支持websocket，暂不能使用此脚本', '');
     return
   }
-  helpInfo = []
+  helpInfo = new Array()
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -67,12 +67,8 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       if ($.accountCheck) {
         await jdBeauty();
       }
-      if ($.accountCheck) {
-        helpInfo = $.helpInfo;
-      }
     }
   }
-  //雇佣助力好像没开发...
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -146,7 +142,6 @@ async function mr() {
   let positionList = ['b1', 'b2', 'h1', 'h2', 's1', 's2']
   $.tokens = []
   $.pos = []
-  $.helpInfo = []
   $.needs = []
   let client = new WebSocket(`wss://xinruimz-isv.isvjcloud.com/wss/?token=${$.token}`,null,{
     headers:{
@@ -165,8 +160,12 @@ async function mr() {
       await $.wait(10000);
     }
     console.log(`\n========生产任务相关========`)
-    for (let help of helpInfo) {
-      client.send(help);
+    for (var key in helpInfo) {
+      // 助力前5个账号
+      if(key.split(',')[0] * 1 >= $.index - 5){
+        client.send(helpInfo[key]);
+        await $.wait(5000);
+      }
     }
     await $.wait(20000);
     client.send(`{"msg":{"type":"action","args":{},"action":"get_produce_material"}}`)
@@ -209,7 +208,7 @@ async function mr() {
     $.init = true;
     $.hasDone = true;
     for (let i = 0; i < $.pos.length && i < $.tokens.length; ++i) {
-      $.helpInfo.push(`{"msg":{"type":"action","args":{"inviter_id":"${$.userInfo.id}","position":"${$.pos[i]}","token":"${$.tokens[i]}"},"action":"employee_v2"}}`)
+      helpInfo[`${$.index},${i + 1}`] = `{"msg":{"type":"action","args":{"inviter_id":"${$.userInfo.id}","position":"${$.pos[i]}","token":"${$.tokens[i]}"},"action":"employee_v2"}}`
     }
   };
   client.onmessage = async function (e) {
