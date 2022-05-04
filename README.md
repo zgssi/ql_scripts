@@ -1,19 +1,22 @@
-## 直连
+### 注意
+本仓库默认会给助力池进行助力！优先内部互助！<br>如需加入助力池请添加TG机器人：https://t.me/JDSharerChat<br/>如不加入助力池互助，可添加变量名称：JD_JOIN_ZLC，变量值：false
+
+### 直连
 ```
 ql repo https://github.com/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|utils" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|JDSignValidator|JDJRValidator_Aaron|sign_graphics_validate|utils"
 ```
 
-## 镜像（推荐）
+### 镜像（推荐）
 ```
 ql repo https://hub.gitfast.tk/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|utils" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|JDSignValidator|JDJRValidator_Aaron|sign_graphics_validate|utils"
 ```
 
-## 青龙配置文件
+### 青龙配置文件
 ```
 RepoFileExtensions="js py ts so"
 ```
 
-## 特别声明:
+### 特别声明
 
 * 本仓库涉仅用于测试和学习研究，禁止用于商业用途，不能保证其合法性，准确性，完整性和有效性，请根据情况自行判断.
 
@@ -31,4 +34,4 @@ RepoFileExtensions="js py ts so"
 
 **您必须在下载后的24小时内从计算机或手机中完全删除以上内容.**  </br>
 > ***您使用或者复制了本仓库且本人制作的任何脚本，则视为`已接受`此声明，请仔细阅读***
-## 多谢
+### 多谢
