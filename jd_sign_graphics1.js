@@ -37,7 +37,7 @@ const turnTableId = [
     // { "name": "周六福珠宝", "id": 1316, "shopid": 1000075555, "url": "https://sendbeans.jd.com/jump/index/" },
     { "name": "天章", "id": 1345, "shopid": 1000000142, "url": "https://sendbeans.jd.com/jump/index/" },
     // { "name": "英氏", "id": 1349, "shopid": 12137, "url": "https://sendbeans.jd.com/jump/index/" },
-    { "name": "星巴克家享咖啡", "id": 1355, "shopid": 1000225742, "url": "https://sendbeans.jd.com/jump/index/" },
+    // { "name": "星巴克家享咖啡", "id": 1355, "shopid": 1000225742, "url": "https://sendbeans.jd.com/jump/index/" },
     // { "name": "colorkey", "id": 1401, "shopid": 1000283022, "url": "https://sendbeans.jd.com/jump/index/" },
 ]
 
