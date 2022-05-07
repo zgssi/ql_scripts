@@ -1,7 +1,7 @@
 /**
  * v0.2
  * cron: 15,30,45 0 * * *
- * 默认前4个开团，自行修改24行
+ * 默认前4个开团，自行修改25行
  * new Env('赚京豆-瓜分京豆')
  */
 
@@ -11,7 +11,7 @@ import { o2s, wait, requireConfig, getshareCodeHW } from "./TS_USER_AGENTS";
 import { SHA256 } from "crypto-js";
 
 let cookie: string = '', res: any = '', UserName: string
-let shareCodeSelf: Tuan[] = [], shareCode: Tuan[] = [], shareCodeHW: any = [], full: string[] = []
+let shareCodeSelf: Tuan[] = [], shareCode: Tuan[] = [], shareCodeHW: any = []
 
 interface Tuan {
     activityIdEncrypted: string, // id
@@ -82,7 +82,7 @@ interface Tuan {
     }
 
     // o2s(shareCodeSelf)
-    await wait(5000)
+    await wait(2000)
 
     for (let [index, value] of cookiesArr.entries()) {
         if (shareCodeHW.length === 0) {
@@ -98,37 +98,33 @@ interface Tuan {
 
         await zjdInit()
         for (let code of shareCode) {
-            if (!full.includes(code.assistedPinEncrypted)) {
-                try {
-                    console.log(`账号${index + 1} ${UserName} 去助力 ${code.assistedPinEncrypted.replace('\n', '')}`)
-                    res = await api('vvipclub_distributeBean_assist', { "activityIdEncrypted": code.activityIdEncrypted, "assistStartRecordId": code.assistStartRecordId, "assistedPinEncrypted": code.assistedPinEncrypted, "channel": "FISSION_BEAN", "launchChannel": "undefined" })
+            try {
+                console.log(`账号${index + 1} ${UserName} 去助力 ${code.assistedPinEncrypted.replace('\n', '')}`)
+                res = await api('vvipclub_distributeBean_assist', { "activityIdEncrypted": code.activityIdEncrypted, "assistStartRecordId": code.assistStartRecordId, "assistedPinEncrypted": code.assistedPinEncrypted, "channel": "FISSION_BEAN", "launchChannel": "undefined" })
 
-                    if (res.resultCode === '9200008') {
-                        console.log('不能助力自己')
-                    } else if (res.resultCode === '2400203') {
-                        console.log('上限')
-                        break
-                    } else if (res.resultCode === '2400205') {
-                        console.log('对方已成团')
-                        full.push(code.assistedPinEncrypted)
-                    } else if (res.resultCode === '9200011') {
-                        console.log('已助力过')
-                    } else if (res.success) {
-                        console.log('助力成功')
-                    } else {
-                        console.log('error', JSON.stringify(res))
-                    }
-                } catch (e) {
-                    console.log(e)
+                if (res.resultCode === '9200008') {
+                    console.log('不能助力自己')
+                } else if (res.resultCode === '2400203' || res.resultCode === '90000014') {
+                    console.log('上限')
                     break
+                } else if (res.resultCode === '2400205') {
+                    console.log('对方已成团')
+                } else if (res.resultCode === '9200011') {
+                    console.log('已助力过')
+                } else if (res.success) {
+                    console.log('助力成功')
+                } else {
+                    console.log('error', JSON.stringify(res))
                 }
-                await wait(2000)
+            } catch (e) {
+                console.log(e)
+                break
             }
+            await wait(2000)
         }
         await wait(2000)
     }
 })()
-
 
 async function api(fn: string, body: object) {
     let h5st = zjdH5st({
