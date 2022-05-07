@@ -205,7 +205,7 @@ async function getLog() {
         return data
     } else {
         if (PandaToken) {
-            let data = await get(`https://api.zhezhe.cf/jd/log`, '', { 'Authorization': 'Bearer ' + PandaToken })
+            let data = await get(`https://api.jds.codes/jd/log`, '', { 'Authorization': 'Bearer ' + PandaToken })
             if (data && data.code === 200) {
                 console.log('Panda log')
                 data.data.random = data.data.random.toString()
