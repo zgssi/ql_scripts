@@ -35,14 +35,14 @@ let cookie: string = '', UserName: string, res: any, element
       }
       if (res.farmUserPro.treeState === 3) {
         element = res.farmLevelWinGoods[4][0];
-        // if (!element) {
-        //   console.log('4级不可种，降为3级')
-        //   element = res.farmLevelWinGoods[3][0];
-        // }
-        // if (!element) {
-        //   console.log('3级不可种，降为2级')
-        //   element = res.farmLevelWinGoods[2][0];
-        // }
+        if (!element) {
+          console.log('4级不可种，降为3级')
+          element = res.farmLevelWinGoods[3][0];
+        }
+        if (!element) {
+          console.log('3级不可种，降为2级')
+          element = res.farmLevelWinGoods[2][0];
+        }
       }
     }
     else {
