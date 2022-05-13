@@ -75,6 +75,9 @@ let shareCodes: INVITE[] = [], shareCodesHW = [], shareCodesSelf: INVITE[] = []
                 await wait(2000)
             }
 
+            await api('happyDigHome', { "linkId": "pTTvJeSTrpthgk9ASBVGsw" })
+            await wait(1000)
+
             res = await api('apTaskList', { "linkId": "pTTvJeSTrpthgk9ASBVGsw" })
             await wait(1000)
 

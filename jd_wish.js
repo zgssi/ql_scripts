@@ -169,7 +169,7 @@ async function healthyDay_getHomeData(type = true) {
                for (let key of Object.keys(data.data.result.hotTaskVos).reverse()) {
                   let vo = data.data.result.hotTaskVos[key]  
                   if (vo.status !== 2) {
-                  if (vo.taskType === 12) {
+                  if (vo.taskType === 12 || vo.taskType === 13) {
                     console.log(`点击热区`)
                     await harmony_collectScore({"appId":appId,"taskToken":vo.simpleRecordInfoVo.taskToken,"taskId":vo.taskId,"actionType":"0"}, vo.taskType)
                   }     
