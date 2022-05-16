@@ -107,38 +107,32 @@ let shareCodes: INVITE[] = [], shareCodesHW = [], shareCodesSelf: INVITE[] = []
         await h5stTool.__genAlgo()
         res = await api('happyDigHome', { "linkId": "pTTvJeSTrpthgk9ASBVGsw" })
         let blood: number = res.data.blood
-        for (let i = 0; i < 4; i++) {
-            try {
-                if (blood <= 1) {
-                    console.log('能量剩余1，跳过 A')
-                    break
-                }
-                for (let j = 0; j < 4; j++) {
-                    if (blood <= 1) {
-                        console.log('能量剩余1，跳过 B')
-                        break
-                    }
-                    res = await api('happyDigDo', { "round": 1, "rowIdx": i, "colIdx": j, "linkId": "pTTvJeSTrpthgk9ASBVGsw" })
-                    o2s(res)
-
-                    if (res.data.chunk.type === 1) {
-                        console.log('挖到👎')
-                    } else if (res.data.chunk.type === 2) {
-                        console.log('挖到🧧', parseFloat(res.data.chunk.value))
-                    } else if (res.data.chunk.type === 4) {
-                        console.log('挖到💣')
-                    }
-                    await wait(1000)
-                    res = await api('happyDigHome', { "linkId": "pTTvJeSTrpthgk9ASBVGsw" })
-                    if (res.data.blood === 1) {
-                        blood = 1
+        for (let round of res.data.roundList) {
+            console.log('round:' + round.round)
+            for (let chunk of round.chunks ?? []) {
+                try {
+                    if (blood === 1) {
                         console.log('能量剩余1，退出')
                         break
                     }
+                    res = await api('happyDigDo', { "round": round.round, "rowIdx": chunk.rowIdx, "colIdx": chunk.colIdx, "linkId": "pTTvJeSTrpthgk9ASBVGsw" })
+                    // o2s(res)
+                    if (res.data.chunk.type === 1) {
+                        console.log('[' + chunk.rowIdx + ',' + chunk.colIdx + ']挖到👎')
+                    } else if (res.data.chunk.type === 2) {
+                        console.log('[' + chunk.rowIdx + ',' + chunk.colIdx + ']挖到🧧', parseFloat(res.data.chunk.value))
+                    } else if (res.data.chunk.type === 3) {
+                        console.log('[' + chunk.rowIdx + ',' + chunk.colIdx + ']挖到💴', parseFloat(res.data.chunk.value))
+                    } else if (res.data.chunk.type === 4) {
+                        console.log('[' + chunk.rowIdx + ',' + chunk.colIdx + ']挖到💣')
+                    }
+                    await wait(1000)
+                    res = await api('happyDigHome', { "linkId": "pTTvJeSTrpthgk9ASBVGsw" })
+                    blood = res.data.blood
                     await wait(4000)
+                } catch (e) {
+                    console.log('error', res?.errMsg)
                 }
-            } catch (e) {
-                console.log('error', res?.errMsg)
             }
         }
     }
