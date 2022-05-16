@@ -95,7 +95,10 @@ let captainId: string = '', h5stTool: H5ST = new H5ST('b6ac3', 'jdltapp;', '1804
             }
             await startRunning(res, assets)
 
+            res = await runningPageHome()
             for (let i = 0; i < energy; i++) {
+                if (res.data.runningHomeInfo.nextRunningTime / 1000 < 3000)
+                    break
                 console.log('💉')
                 res = await api('runningUseEnergyBar', { "linkId": "L-sOanK_5RJCz7I314FpnQ" })
                 console.log(res.errMsg)
