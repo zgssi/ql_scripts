@@ -19,7 +19,7 @@ let captainId: string = '', h5stTool: H5ST = new H5ST('b6ac3', 'jdltapp;', '1804
         cookie = value
         UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
         console.log(`\n开始【京东账号${index + 1}】${UserName}\n`)
-        let assets: number = parseFloat(process.env.JD_JOY_PARK_RUN_ASSETS || '0.08')
+        let assets: number = parseFloat(process.env.JD_JOY_PARK_RUN_ASSETS || '0.04')
         let rewardAmount: number = 0
         try {
             h5stTool = new H5ST('448de', 'jdltapp;', process.env.FP_448DE || '')
