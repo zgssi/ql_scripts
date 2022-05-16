@@ -35,7 +35,7 @@ let captainId: string = '', h5stTool: H5ST = new H5ST('b6ac3', 'jdltapp;', '1804
             }
 
             for (let t of res?.data?.detailVos || []) {
-                if (getDate(new Date(t.createTime)) === new Date().getDate()) {
+                if (t.amount > 0 && getDate(new Date(t.createTime)) === new Date().getDate()) {
                     sum = add(sum, t.amount)
                     success++
                 } else {
