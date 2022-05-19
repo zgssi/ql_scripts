@@ -65,7 +65,11 @@ def getTokens():
                 urls.extend(envs.get('value').split('&'))
         for url in urls:
             log(url)
-            res = requests.get(url)
+            try:
+                res = requests.get(url)
+            except Exception as e:
+                log("同步tokens错误：", str(e))
+                continue
             token_list = re.findall('"(\w{32})"', res.text)
             tokens.extend(token_list)
             log('远程tokens获取成功！共[{0}]个'.format(len(token_list)))
