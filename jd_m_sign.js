@@ -85,8 +85,8 @@ async function jdsign() {
     await $.wait(2000)
     await getInfo("https://prodev.m.jd.com/mall/active/412SRRXnKE1Q4Y6uJRWVT6XhyseG/index.html");//服装定制 品质专享
     await $.wait(2000)
-    await getInfo("https://prodev.m.jd.com/mall/active/3tGNAF6L1zJZ2iLyGG5bAUiny1eD/index.html");//惠寻
-    await $.wait(2000)
+    // await getInfo("https://prodev.m.jd.com/mall/active/3tGNAF6L1zJZ2iLyGG5bAUiny1eD/index.html");//惠寻
+    // await $.wait(2000)
     await getInfo("https://prodev.m.jd.com/mall/active/2BspupMr6qenk9JUWpbAnepLHjwy/index.html");//女装馆
     await $.wait(2000)
   } catch (e) {
