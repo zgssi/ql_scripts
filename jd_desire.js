@@ -2,11 +2,11 @@
 京东集魔方
 ===========================
 
-cron:8 0 * * *
+cron:30 6 * * *
 ============Quantumultx===============
 [task_local]
 #集魔方
-8 0 * * * jd_desire.js, tag=集魔方, enabled=true
+30 6 * * * jd_desire.js, tag=集魔方, enabled=true
  */
 
 const $ = new Env('京东集魔方');
@@ -151,7 +151,7 @@ async function getInteractionInfo(type = true) {
 }
 function queryPanamaFloor() {
   return new Promise((resolve) => {
-    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01213138","pageId":"3513123","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06282906\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
+    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01235572","pageId":"3622005","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06327486\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -160,7 +160,7 @@ function queryPanamaFloor() {
           if (safeGet(data)) {
             data = JSON.parse(data)
             for (let skuVo of data.data.advData.list) {
-				$.sku2 = ["100035127996","100020571745","100036441470","100019125569","100032353530", "100033492870", "100033551096", "100035250900"]
+				$.sku2 = ["100038312444","100023274622","10052442367186","100038312438","100035222536", "10051584954296", "100033551096", "100035250900"]
                 $.sku2.push(skuVo.advertId)
             }
           }
@@ -176,7 +176,7 @@ function queryPanamaFloor() {
 
 function qryCompositeMaterials() {
   return new Promise((resolve) => {
-    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01213138","pageId":"3513123","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06282906\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
+    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01235572","pageId":"3622005","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06282906\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -207,7 +207,7 @@ function qryCompositeMaterials() {
 
 function qryCompositeMaterials2() {
   return new Promise((resolve) => {
-    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01213138","pageId":"3513123","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06290597\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"comment[0]\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
+    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01235572","pageId":"3622005","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06290597\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"comment[0]\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
