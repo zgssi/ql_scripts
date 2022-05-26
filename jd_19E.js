@@ -1,25 +1,25 @@
-if (process.env.JD_19E != "true") {
-    console.log('\n默认不运行,安全性自行衡量,设置变量export JD_19E="true"来运行\n')
+
+/*
+手动先进活动做完引导，入口，首页有测漂浮
+10 0,6-23/2 * * * jd_19E.js
+不完善，凑合跑，估计很快凉。。
+
+*/
+
+if (process.env.DY_19E != "true") {
+    console.log('\n默认不运行，运行前最好手动进任务做完新手引导,设置变量export DY_19E="true"来运行\n')
     return
 }
 
-/*
-
-建议手动先点开一次
-33 0,6-23/2 * * * jd_19E.js
-
-*/
-const $ = new Env('热爱奇旅');
+const $ = new Env('热爱奇旅分19亿');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
-
 let cookiesArr = [],
-    cookie = '',
-    message;
+    cookie = '';
 let secretp = '',
     inviteId = []
-
+let conti = false
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -29,25 +29,16 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = [
 
-]
 $.shareCodesArr = [];
-
+let groups = []
 !(async() => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    $.inviteIdCodesArr = {}
-    for (let i = 0; i < cookiesArr.length && true; i++) {
-        if (cookiesArr[i]) {
-            cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-            $.index = i + 1;
-            await getUA()
-        }
-    }
+    console.log('\n开始异常了，快凉了\n')
+    await getUA()
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -59,42 +50,38 @@ $.shareCodesArr = [];
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             //   await shareCodesFormat()
             $.newShareCodes = []
-            for (let i = 0; i < $.newShareCodes.length && true; ++i) {
-                console.log(`\n开始助力 【${$.newShareCodes[i]}】`)
-                let res = await getInfo($.newShareCodes[i])
-                if (res && res['data'] && res['data']['bizCode'] === 0) {
-                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
-                        console.log(`助力次数已耗尽，跳出`)
-                        break
-                    }
-                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
-                        console.log(`助力 【${$.newShareCodes[i]}】:${res.data.result.toasts[0].msg}`)
-                    }
-                }
-                if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
-                    // 助力次数耗尽 || 黑号
-                    break
-                }
+			await get_secretp()
+            await promote_collectAtuoScore()
+            let res
+            if (i % 30 == 0 ){
+               res = await promote_pk_getHomeData()
+               if (res.data.result.groupInfo.memberList) {
+                 let memberCount = res.data.result.groupInfo.memberList.length
+                 console.log('当前队伍有', memberCount, '人')
+                 let groupJoinInviteId = ""
+               
+                 if (memberCount < 30) {
+                   groupJoinInviteId = res.data.result.groupInfo.groupJoinInviteId
+                   res = await getEncryptedPinColor()
+                   groups.push({mpin: res.result, groupJoinInviteId: groupJoinInviteId})
+                   console.log('队伍未满:', groupJoinInviteId)
+                 }
+               }
             }
             try {
-                await get_secretp()
-
                 do {
-                    var conti = false
-                    await promote_collectAtuoScore()
+                    
                     res = await promote_getTaskDetail()
-
                     for (var p = 0; p < res.lotteryTaskVos[0].badgeAwardVos.length; p++) {
                         if (res.lotteryTaskVos[0].badgeAwardVos[p].status == 3) {
                             await promote_getBadgeAward(res.lotteryTaskVos[0].badgeAwardVos[p].awardToken)
                         }
-
                     }
                     let task = []
                     let r = []
                     for (var p = 0; p < res.taskVos.length; p++) {
                         task = res.taskVos[p]
-                        if (task.status != 1) continue
+                        if (task.status != 1 && !task.simpleRecordInfoVo) continue
                         switch (task.taskType) {
                             case 7:
                             case 9:
@@ -113,14 +100,16 @@ $.shareCodesArr = [];
                                     if (tmp[o].status == 1) {
                                         conti = true
                                         await promote_collectScore(tmp[o].taskToken, task.taskId)
+                                        await $.wait(1000)
                                     }
 
                                 }
                                 await $.wait(8000)
                                 for (var o = 0; o < tmp.length; o++) {
-                                    if (tmp[o].status == 1) {
+                                    if (tmp[o].status == 1 && task.taskType !== 3 && task.taskType !== 26  ) {
                                         conti = true
                                         await qryViewkitCallbackResult(tmp[o].taskToken)
+                                        await $.wait(1000)
                                     }
 
                                 }
@@ -132,6 +121,7 @@ $.shareCodesArr = [];
                                     if (r.productInfoVos[o].status == 1) {
                                         conti = true
                                         await promote_collectScore(r.productInfoVos[o].taskToken, task.taskId)
+                                        await $.wait(1000)
                                         t++
                                         if (t >= 5) break
                                     }
@@ -145,42 +135,102 @@ $.shareCodesArr = [];
                                     if (r.browseShopVo[o].status == 1) {
                                         conti = true
                                         await promote_collectScore(r.browseShopVo[o].taskToken, task.taskId)
+                                        await $.wait(1000)
                                         t++
                                         if (t >= 5) break
                                     }
 
                                 }
                                 break
-                            case 21:
+                            case 210:
                                 for (var o = 0; o < task.brandMemberVos.length; o++) {
                                     if (task.brandMemberVos[o].status == 1) {
-                                        console.log(`\n\n ${task.brandMemberVos[o].title}`)
-                                        memberUrl = task.brandMemberVos[o].memberUrl
-                                        memberUrl = transform(memberUrl)
-                                        await join(task.brandMemberVos[o].vendorIds, memberUrl.channel, memberUrl.shopId ? memberUrl.shopId : "")
-                                        await promote_collectScore(task.brandMemberVos[o].taskToken, task.taskId)
+                                        //console.log(`\n\n ${task.brandMemberVos[o].title}`)
+                                        //memberUrl = task.brandMemberVos[o].memberUrl
+                                        //memberUrl = transform(memberUrl)
+                                        //await join(task.brandMemberVos[o].vendorIds, memberUrl.channel, memberUrl.shopId ? memberUrl.shopId : "")
+                                        //await promote_collectScore(task.brandMemberVos[o].taskToken, task.taskId)
                                     }
 
                                 }
+                                break
+                            case 0:
+                                    tmp = task.simpleRecordInfoVo
+                                    if (task.status == 1 && task.taskName !== '去组队分大奖' || task.status !== 1 ) {
+                                        conti = true
+                                        await promote_collectScore(tmp.taskToken, task.taskId)
+                                        await $.wait(1000)
+                                    }
                         }
 
                     }
                     await $.wait(1000)
                 } while (conti)
 
-
                 await promote_sign()
                 do {
                     var ret = await promote_raise()
+                    await $.wait(1000)
                 } while (ret)
                 console.log(`\n\n助力码：${res.inviteId}\n`)
-                $.newShareCodes.push(res.inviteId)
                 inviteId.push(res.inviteId)
             } catch (e) {
                 $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
             }
         }
     }
+	try{
+        for (let i = 0; i < cookiesArr.length; i++) {
+             if (cookiesArr[i]) {
+                 cookie = cookiesArr[i];
+                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+                 $.index = i + 1;
+                 $.isLogin = true;
+                 $.nickName = '';
+                 message = '';
+                 console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);  
+                 await get_secretp() 
+                 await $.wait(1000)
+                 let res
+                 for (let s = 0; s < inviteId.length; s++) {
+                     console.log(`\n开始助力 【${inviteId[s]}】`)
+                     res = await help(inviteId[s])
+                     if ( res['data']['bizCode'] === 0) {
+                             console.log('助力成功,获得：', parseFloat(res.data.result.acquiredScore), '金币')
+                               if (res.data.result?.redpacket?.value)
+                                 console.log('🧧', parseFloat(res.data.result?.redpacket?.value))
+                                  //console.log('助力结果：'+res.data.bizMsg)
+                     } else if (res.data.bizMsg === '助力次数用完啦~') { console.log(res.data.bizMsg);break}
+                    else if (res.data.bizMsg === '好友人气爆棚，不需要助力啦~') { console.log(res.data.bizMsg)}
+                    else {console.log(res.data.bizMsg)}
+                     await $.wait(1000)
+                 }  
+		     
+                 res = await promote_pk_getHomeData()
+                 if (res.data.result.groupInfo.memberList) {
+                   let memberCount = res.data.result.groupInfo.memberList.length
+                   if (memberCount === 1) {
+                     for (let group of groups) {
+                       console.log('\n开始加入队伍：', group.groupJoinInviteId)
+                       res = await collectFriendRecordColor(group.mpin)
+                       res = await promote_pk_joinGroup(group.groupJoinInviteId)
+                       await $.wait(3000)
+                       if (res.data.bizCode === 0) {
+                         console.log('加入队伍成功')
+                         break
+                       } else {
+                         console.log(res.data.bizMsg)
+                       }
+                       res = await promote_pk_getHomeData()
+                     }
+                   }
+                   await $.wait(3000)
+                 }
+             }
+       }
+     } catch (e) {
+         $.log(`❌ ${$.name}, 失败! 原因: `, e)
+     }       
 })()
 .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -215,7 +265,7 @@ function get_secretp() {
                         if (data.code == 0) {
                             if (data.data && data.data.bizCode === 0) {
                                 secretp = data.data.result.homeMainInfo.secretp
-                                console.log(secretp)
+                               // console.log(secretp)
                           }
                         } else 
                         if (data.code != 0) {
@@ -267,7 +317,8 @@ function promote_sign() {
 }
 
 function promote_raise() {
-    let body = {"scenceId":4, "ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
+    let s = Math.floor((Math.random()*3)) +1
+    let body = {"scenceId":s, "ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_raise", body), async(err, resp, data) => {
             try {
@@ -303,7 +354,7 @@ function promote_raise() {
 function promote_collectAtuoScore() {
     let body = { "ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
     return new Promise((resolve) => {
-        $.post(taskPostUrl("promote_collectAtuoScore", body), async(err, resp, data) => {
+        $.post(taskPostUrl("promote_collectAutoScore", body), async(err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -314,8 +365,8 @@ function promote_collectAtuoScore() {
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
 
-                                console.log(`\n\n 成功领取${data.data.result.produceScore}个币`)
-                            }
+                                console.log(`成功领取${data.data.result.produceScore}个币`)
+                            }else{console.log(data.data.bizMsg)}
                         } else {
                             //console.log(`\n\nsecretp失败:${JSON.stringify(data)}\n`)
                         }
@@ -347,7 +398,7 @@ function promote_getTaskDetail() {
                                     console.log("黑号")
                                     resolve("")
                                 }
-                                inviteId.push(data.data.result.inviteId)
+                                //inviteId.push(data.data.result.inviteId)
                                 resolve(data.data.result)
                             }
                         } else {
@@ -379,10 +430,40 @@ function promote_collectScore(taskToken, taskId) {
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
                                 console.log(data.msg)
-                            }
+                            }else{console.log(data.data.bizMsg);conti=false}
                         } else {
-                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
+                            console.log(`\n 失败:${JSON.stringify(data)}\n`)
                         }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
+function help(inviteId) {
+    let body = { "actionType": 0, "inviteId": inviteId,"ss": { "extraData": { "log": "", "sceneid": "RAhomePageh5" }, "secretp": secretp, "random": randomString(6) } };
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("promote_collectScore", body), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        //console.log(data)
+                        //if (data.data.bizCode === 0) {
+                            //if (data.data && data['data']['bizCode'] === 0) {
+                              //  console.log(data.bizMsg)
+                            //}
+                        //} else {
+                           // console.log(`\n 失败:` + data.bizMsg)
+                       // }
                     }
                 }
             } catch (e) {
@@ -559,7 +640,100 @@ function join(venderId, channel, shopId) {
         })
     })
 }
+function promote_pk_getHomeData() {
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("promote_pk_getHomeData", {}), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        } else {
+                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
+                        }
+                    }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
 
+function getEncryptedPinColor() {
+    return new Promise((resolve) => {
+        $.post(taskPostUrl2("getEncryptedPinColor", {}), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        } else {
+                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
+                        }
+                    }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
+
+function collectFriendRecordColor(mpin) {
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("collectFriendRecordColor", {"mpin": mpin, "businessCode": "20136", "assistType": "2", "shareSource": 1}), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        } else {
+                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
+                        }
+                    }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
+
+function promote_pk_joinGroup(groupJoinInviteId) {
+    let body = {"inviteId": groupJoinInviteId, "ss": {extraData: {log: "", sceneid: 'RAhomePageh5'}, secretp: secretp, random: randomString(6)}, "confirmFlag": 1};
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("promote_pk_joinGroup", body), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        } else {
+                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
+                        }
+                    }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
 function taskPostUrl(functionId, body) {
     return {
         //functionId=promote_getHomeData&body={}&client=wh5&clientVersion=1.0.0
