@@ -395,7 +395,7 @@ function try_feedsList(tabId, page) {
             "previewTime": ""
         });
         let option = taskurl_xh('newtry', 'try_feedsList', body)
-        $.get(option, (err, resp, data) => {
+        $.post(option, (err, resp, data) => {
             try{
                 if(err){
                     if(JSON.stringify(err) === `\"Response code 403 (Forbidden)\"`){
@@ -571,7 +571,7 @@ function try_MyTrials(page, selected) {
                 'origin': 'https://prodev.m.jd.com',
                 'User-Agent': 'jdapp;iPhone;10.3.4;;;M/5.0;appBuild/167945;jdSupportDarkMode/1;;;Mozilla/5.0 (iPhone; CPU iPhone OS 15_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;',
                 'referer': 'https://prodev.m.jd.com/',
-                'cookie': $.cookie
+                'cookie': `${$.cookie}__jda=1.1.1.1.1;`
             },
         }
         $.post(options, (err, resp, data) => {
@@ -612,9 +612,14 @@ function taskurl_xh(appid, functionId, body = JSON.stringify({})) {
     return {
         "url": `${URL}?appid=${appid}&functionId=${functionId}&clientVersion=10.3.4&client=wh5&body=${encodeURIComponent(body)}`,
         'headers': {
-            'Cookie': $.cookie,
-            'UserAgent': 'jdapp;iPhone;10.1.2;15.0;ff2caa92a8529e4788a34b3d8d4df66d9573f499;network/wifi;model/iPhone13,4;addressid/2074196292;appBuild/167802;jdSupportDarkMode/1;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
-            'Referer': 'https://prodev.m.jd.com/'
+            'Cookie': `${$.cookie}__jda=1.1.1.1.1;`,
+            'user-agent': 'jdapp;iPhone;10.1.2;15.0;ff2caa92a8529e4788a34b3d8d4df66d9573f499;network/wifi;model/iPhone13,4;addressid/2074196292;appBuild/167802;jdSupportDarkMode/1;Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
+            'Referer': 'https://prodev.m.jd.com/',
+            'origin': 'https://prodev.m.jd.com/',
+            'Accept': 'application/json,text/plain,*/*',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'zh-cn',
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
     }
 }
