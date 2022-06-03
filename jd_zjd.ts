@@ -31,7 +31,7 @@ interface Tuan {
 
             res = await api('distributeBeanActivityInfo', { "paramData": { "channel": "FISSION_BEAN" } })
             // o2s(res)
-            await wait(1000)
+            // await wait(1000)
 
             if (res.data.assistStatus === 1) {
                 // 已开，没满
@@ -45,7 +45,7 @@ interface Tuan {
                 // 没开团
                 res = await api('vvipclub_distributeBean_startAssist', { "activityIdEncrypted": res.data.id, "channel": "FISSION_BEAN" })
                 // o2s(res)
-                await wait(1000)
+                // await wait(1000)
                 if (res.success) {
                     console.log(`开团成功，结束时间：${res.data.endTime}`)
                     res = await api('distributeBeanActivityInfo', { "paramData": { "channel": "FISSION_BEAN" } })
@@ -54,13 +54,13 @@ interface Tuan {
                         assistStartRecordId: res.data.assistStartRecordId,
                         assistedPinEncrypted: res.data.encPin,
                     })
-                    await wait(1000)
+                    // await wait(1000)
                 }
             } else if (res.data.assistedRecords.length === res.data.assistNum) {
                 console.log('已成团')
                 if (res.data.canStartNewAssist) {
                     res = await api('vvipclub_distributeBean_startAssist', { "activityIdEncrypted": res.data.id, "channel": "FISSION_BEAN" })
-                    await wait(1000)
+                    // await wait(1000)
                     if (res.success) {
                         console.log(`开团成功，结束时间：${res.data.endTime}`)
                         res = await api('distributeBeanActivityInfo', { "paramData": { "channel": "FISSION_BEAN" } })
@@ -69,7 +69,7 @@ interface Tuan {
                             assistStartRecordId: res.data.assistStartRecordId,
                             assistedPinEncrypted: res.data.encPin,
                         })
-                        await wait(1000)
+                        // await wait(1000)
                     }
                 }
             } else if (!res.data.canStartNewAssist) {
@@ -78,11 +78,11 @@ interface Tuan {
         } catch (e) {
             continue
         }
-        await wait(1000)
+        // await wait(1000)
     }
 
     // o2s(shareCodeSelf)
-    await wait(2000)
+    // await wait(2000)
 
     for (let [index, value] of cookiesArr.entries()) {
         if (shareCodeHW.length === 0) {
@@ -120,13 +120,14 @@ interface Tuan {
                 console.log(e)
                 break
             }
-            await wait(2000)
+            // await wait(2000)
         }
-        await wait(2000)
+        // await wait(2000)
     }
 })()
 
 async function api(fn: string, body: object) {
+    await wait(4000)
     let h5st = zjdH5st({
         'fromType': 'wxapp',
         'timestamp': Date.now(),
