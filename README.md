@@ -22,7 +22,7 @@ https://hub.fastgit.xyz/
 
 ### 青龙配置文件
 ```
-RepoFileExtensions="js py ts so"
+RepoFileExtensions="js py ts"
 ```
 ```
 GithubProxyUrl=""
