@@ -305,7 +305,7 @@ function getSignfromWindfgg(functionId, body) {
 				
 				if (data && data.code == 200) {
                     lnrequesttimes = data.request_times;
-                    console.log("连接WindfggPanda服务成功，当前Token使用次数为" + lnrequesttimes);
+                    console.log("连接Windfgg服务成功，当前Token使用次数为" + lnrequesttimes);
                     if (data.data)
                         strsign = data.data || '';
                     if (strsign != '')
