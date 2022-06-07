@@ -25,7 +25,7 @@ cron "2 0-23/4 * * *" script-path=jd_cash.js,tag=签到领现金
 他的交流群：https://t.me/jdPLA2
 
  */
-const $ = new Env('签到领现金_Panda');
+const $ = new Env('签到领现金_Windfgg');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -46,11 +46,11 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let allMessage = '';
-let jdPandaToken = '';
-jdPandaToken = $.isNode() ? (process.env.PandaToken ? process.env.PandaToken : `${jdPandaToken}`) : ($.getdata('PandaToken') ? $.getdata('PandaToken') : `${jdPandaToken}`);
-if (!jdPandaToken) {
-    console.log('请填写Panda获取的Token,变量是PandaToken');
-	return;
+let jdWindfggToken = '';
+jdWindfggToken = $.isNode() ? (process.env.WindfggToken ? process.env.WindfggToken : `${jdWindfggToken}`) : ($.getdata('WindfggToken') ? $.getdata('WindfggToken') : `${jdWindfggToken}`);
+if (!jdWindfggToken) {
+  console.log('\n请前往 https://t.me/wind_fgg   获取Token\n请填写Windfgg获取的Token,变量是WindfggToken');
+  return;
 }
 
 !(async () => {
@@ -227,7 +227,7 @@ function index() {
 async function appdoTask(type,taskInfo) {
   let functionId = 'cash_doTask'
   let body = {"type":type,"taskInfo":taskInfo}
-  let sign = await getSignfromPanda(functionId, body)  
+  let sign = await getSignfromWindfgg(functionId, body)  
 
   return new Promise((resolve) => {
     $.post(apptaskUrl(functionId, sign), (err, resp, data) => {
@@ -280,7 +280,7 @@ function doTask(type,taskInfo) {
     })
   })
 }
-function getSignfromPanda(functionId, body) {	
+function getSignfromWindfgg(functionId, body) {	
     var strsign = '';
 	let data = {
       "fn":functionId,
@@ -288,14 +288,14 @@ function getSignfromPanda(functionId, body) {
     }
     return new Promise((resolve) => {
         let url = {
-            url: "https://api.zhezhe.cf/jd/sign",
+            url: "https://api.windfgg.cf/jd/sign",
             body: JSON.stringify(data),
 		    followRedirect: false,
 		    headers: {
 		        'Accept': '*/*',
 		        "accept-encoding": "gzip, deflate, br",
 		        'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + jdPandaToken
+				'Authorization': 'Bearer ' + jdWindfggToken
 		    },
 		    timeout: 30000
         }
@@ -305,9 +305,9 @@ function getSignfromPanda(functionId, body) {
 				
 				if (data && data.code == 200) {
                     lnrequesttimes = data.request_times;
-                    console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
-                    if (data.data.sign)
-                        strsign = data.data.sign || '';
+                    console.log("连接WindfggPanda服务成功，当前Token使用次数为" + lnrequesttimes);
+                    if (data.data)
+                        strsign = data.data || '';
                     if (strsign != '')
                         resolve(strsign);
                     else
