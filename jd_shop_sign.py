@@ -53,26 +53,25 @@ def getTokens():
     token_env = tokens_envs[0]
     log('本地tokens加载成功！共[{0}]个'.format(len(tokens)))
 
-    if time.localtime().tm_hour != 0:
-        log("非0点，开始同步其他大佬仓库脚本tokens")
-        log("环境变量:DPQDTK_URLS=url1&url2...")
-        log("没必要加太多，每日签到上限[21]个!")
-        urls = ['https://cdn.jsdelivr.net/gh/KingRan/KR@main/jd_dpqd.js',
-            'https://cdn.jsdelivr.net/gh/6dylan6/jdpro@main/jd_dpsign.js']
-        tokens_urls_envs = get_envs("DPQDTK_URLS")
-        for envs in tokens_urls_envs:
-            if envs.get('status') == 0:
-                urls.extend(envs.get('value').split('&'))
-        for url in urls:
-            log(url)
-            try:
-                res = requests.get(url)
-            except Exception as e:
-                log("同步tokens错误：", str(e))
-                continue
-            token_list = re.findall('"(\w{32})"', res.text)
-            tokens.extend(token_list)
-            log('远程tokens获取成功！共[{0}]个'.format(len(token_list)))
+    log("开始同步其他大佬仓库脚本tokens")
+    log("环境变量:DPQDTK_URLS=url1&url2...")
+    log("没必要加太多，每日签到上限[21]个!")
+    urls = ['https://cdn.jsdelivr.net/gh/KingRan/KR@main/jd_dpqd.js',
+        'https://cdn.jsdelivr.net/gh/6dylan6/jdpro@main/jd_dpsign.js']
+    tokens_urls_envs = get_envs("DPQDTK_URLS")
+    for envs in tokens_urls_envs:
+        if envs.get('status') == 0:
+            urls.extend(envs.get('value').split('&'))
+    for url in urls:
+        log(url)
+        try:
+            res = requests.get(url)
+        except Exception as e:
+            log("同步tokens错误：", str(e))
+            continue
+        token_list = re.findall('"(\w{32})"', res.text)
+        tokens.extend(token_list)
+        log('远程tokens获取成功！共[{0}]个'.format(len(token_list)))
 
     # 随机排序
     # random.shuffle(tokens)
