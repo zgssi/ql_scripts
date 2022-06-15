@@ -273,8 +273,8 @@ async function mr() {
             // await $.wait(10000);
           }
           count = $.taskState.product_adds.length;
-          if (count < $.taskState.daily_product_add_times && process.env.FS_LEVEL) console.log(`\n去做浏览并加购任务\n`)
-          for (let i = 0; i < vo.data.products.length && count < $.taskState.daily_product_add_times && process.env.FS_LEVEL; ++i) {
+          if (count < $.taskState.daily_product_add_times && process.env.ADD_CART) console.log(`\n去做浏览并加购任务\n`)
+          for (let i = 0; i < vo.data.products.length && count < $.taskState.daily_product_add_times && process.env.ADD_CART; ++i) {
             const product = vo.data.products[i];
             if (!$.taskState.product_adds.includes(product.id)) {
               count++;
