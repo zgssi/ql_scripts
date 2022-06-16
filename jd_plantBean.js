@@ -254,6 +254,7 @@ async function doEgg() {
 async function doTask() {
   await receiveNutrientsTask(54);//7周年庆
   await receiveNutrientsTask(88);//18聚财日
+  await receiveNutrientsTask(89);//企业采购
   await receiveNutrientsTask(91);//返京豆
   await receiveNutrientsTask(93);//送500豆
   await receiveNutrientsTask(94);//试驾抽奖
