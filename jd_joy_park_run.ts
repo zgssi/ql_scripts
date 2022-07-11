@@ -1,39 +1,38 @@
 /**
- * 汪汪赛跑
- * 默认翻倍到0.08红包结束
- * export JD_JOY_PARK_RUN_ASSETS="0.08"
- * cron: 20 * * * *
- * new Env('汪汪赛跑')
- */
+汪汪乐园-跑步+组队
+默认翻倍到0.04红包结束,修改请设置变量
+export JD_JOY_PARK_RUN_ASSETS="0.08"
+32 * * * * jd_joy_joy_run.ts
+new Env('极速版汪汪赛跑')
+Modify By Dylan from HW
+**/
 
-import { get, post, requireConfig, wait, o2s } from './TS_USER_AGENTS'
+import { get, post, o2s, requireConfig, wait } from './TS_USER_AGENTS'
 import { H5ST } from "./utils/h5st"
+import { existsSync, readFileSync } from "fs";
 import { getDate } from "date-fns";
 
-let cookie: string = '', UserName: string = ''
-let captainId: string = '', h5stTool: H5ST = new H5ST('b6ac3', 'jdltapp;', '1804945295425750')
+let cookie: string = '', res: any = '', UserName: string = '', fp_448de: string = '' || process.env.FP_448DE, fp_b6ac3: string = '' || process.env.FP_B6AC3
+let assets: number = 0, captainId: string = '', h5stTool: H5ST = null
 
 !(async () => {
     let cookiesArr: string[] = await requireConfig()
+    let account: { pt_pin: string, joy_park_run: number }[] = []
+    console.log('每周日18点组队分红！！')
     for (let [index, value] of cookiesArr.entries()) {
         cookie = value
         UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
         console.log(`\n开始【京东账号${index + 1}】${UserName}\n`)
-        let assets: number = parseFloat(process.env.JD_JOY_PARK_RUN_ASSETS || '0.04')
+
+
+
+        assets = parseFloat(process.env.JD_JOY_PARK_RUN_ASSETS || '0.04')
         let rewardAmount: number = 0
         try {
-            h5stTool = new H5ST('448de', 'jdltapp;', process.env.FP_448DE || '')
+            h5stTool = new H5ST('448de', 'jdltapp;', fp_448de)
             await h5stTool.__genAlgo()
-            let res: any = await team('runningMyPrize', { "linkId": "L-sOanK_5RJCz7I314FpnQ", "pageSize": 20, "time": null, "ids": null })
+            res = await team('runningMyPrize', { "linkId": "L-sOanK_5RJCz7I314FpnQ", "pageSize": 20, "time": null, "ids": null })
             let sum: number = 0, success: number = 0
-            rewardAmount = res.data.rewardAmount
-            if (res.data.runningCashStatus.currentEndTime && res.data.runningCashStatus.status === 0) {
-                console.log('可提现', rewardAmount)
-                res = await api('runningPrizeDraw', { "linkId": "L-sOanK_5RJCz7I314FpnQ", "type": 2 })
-                await wait(2000)
-                console.log(res.data?.message || res.errMsg)
-            }
-
             for (let t of res?.data?.detailVos || []) {
                 if (t.amount > 0 && getDate(new Date(t.createTime)) === new Date().getDate()) {
                     sum = add(sum, t.amount)
@@ -42,18 +41,21 @@ let captainId: string = '', h5stTool: H5ST = new H5ST('b6ac3', 'jdltapp;', '1804
                     break
                 }
             }
-            console.log('成功', success)
-            console.log('收益', parseFloat(sum.toFixed(2)))
+            console.log('今日成功', success, '次')
+            console.log('今日收益', sum.toFixed(2), '元')
+
             res = await team('runningTeamInfo', { "linkId": "L-sOanK_5RJCz7I314FpnQ" })
             if (!captainId) {
                 if (res.data.members.length === 0) {
                     console.log('成为队长')
                     captainId = res.data.captainId
                 } else if (res.data.members.length !== 6) {
-                    console.log('队伍未满', res.data.members.length)
+                    console.log('队伍未满', res.data.members.length, '人')
+                    console.log('战队收益', res.data.teamSumPrize, '元')
                     captainId = res.data.captainId
                 } else {
-                    console.log('队伍已满')
+                    console.log('队伍已满', res.data.members.length, '人')
+                    console.log('战队收益', res.data.teamSumPrize, '元')
                 }
             } else if (captainId && res.data.members.length === 0) {
                 console.log('已有组队ID，未加入队伍')
@@ -74,41 +76,45 @@ let captainId: string = '', h5stTool: H5ST = new H5ST('b6ac3', 'jdltapp;', '1804
                     o2s(res, '组队失败')
                 }
             } else {
-                console.log('已组队', res.data.members.length)
-                console.log('战队收益', res.data.teamSumPrize)
+                console.log('已组队', res.data.members.length, '人')
+                console.log('战队收益', res.data.teamSumPrize, '元')
             }
 
-            h5stTool = new H5ST('b6ac3', 'jdltapp;', process.env.FP_B6AC3 || '')
+
+            h5stTool = new H5ST('b6ac3', 'jdltapp;', fp_b6ac3)
             await h5stTool.__genAlgo()
             res = await runningPageHome()
-            console.log('🧧', res.data.runningHomeInfo.prizeValue)
-            console.log('💊', res.data.runningHomeInfo.energy)
+            console.log('🧧总金额', res.data.runningHomeInfo.prizeValue, '元')
+
             let energy: number = res.data.runningHomeInfo.energy
+            console.log('💊 X', res.data.runningHomeInfo.energy, '个能量棒')
             await wait(2000)
-
-            console.log('⏳', secondsToMinutes(res.data.runningHomeInfo.nextRunningTime / 1000))
-            if (res.data.runningHomeInfo.nextRunningTime && res.data.runningHomeInfo.nextRunningTime / 1000 < 300) {
-                console.log('⏳')
-                await wait(res.data.runningHomeInfo.nextRunningTime + 3000)
-                res = await runningPageHome()
-                await wait(1000)
+            if (res.data.runningHomeInfo.nextRunningTime) {
+                console.log('⏳体力恢复中，还有', secondsToMinutes(res.data.runningHomeInfo.nextRunningTime / 1000))
+                if (res.data.runningHomeInfo.nextRunningTime / 1000 < 300) {
+                    await wait(res.data.runningHomeInfo.nextRunningTime)
+                    res = await runningPageHome()
+                    console.log('体力恢复完成，开始跑步....')
+                    await wait(1000)
+                } else {
+                    console.log('⏳等体力恢复在跑吧！');
+                    continue;
+                }
+            } else {
+                console.log('体力已恢复，开始跑步....')
             }
-            await startRunning(res, assets)
 
-            res = await runningPageHome()
+            await startRunning(res, assets)
             for (let i = 0; i < energy; i++) {
-                if (res.data.runningHomeInfo.nextRunningTime / 1000 < 3000)
-                    break
-                console.log('💉')
+                console.log('💉消耗能量棒跑步....')
                 res = await api('runningUseEnergyBar', { "linkId": "L-sOanK_5RJCz7I314FpnQ" })
-                console.log(res.errMsg)
+                //console.log(res.errMsg)
                 res = await runningPageHome()
                 await startRunning(res, assets)
                 await wait(1000)
             }
-
             res = await runningPageHome()
-            console.log('🧧', res.data.runningHomeInfo.prizeValue)
+            console.log('🧧总金额', res.data.runningHomeInfo.prizeValue, '元')
             await wait(2000)
         } catch (e) {
             console.log('Error', e)
@@ -152,7 +158,7 @@ async function api(fn: string, body: object) {
             body: JSON.stringify(body),
             client: "ios",
             clientVersion: "3.1.0",
-            functionId: fn,
+            functionId: "runningOpenBox",
             t: timestamp.toString()
         })
     }
@@ -164,7 +170,7 @@ async function api(fn: string, body: object) {
         'cookie': cookie,
         'origin': 'https://h5platform.jd.com',
         'referer': 'https://h5platform.jd.com/',
-        'user-agent': 'jdltapp;iPhone;3.1.0;'
+        'user-agent': 'jdltapp;'
     })
 }
 
@@ -179,8 +185,15 @@ async function runningPageHome() {
 }
 
 async function team(fn: string, body: object) {
-    let timestamp: number = Date.now()
-    let h5st: string = ''
+    let timestamp: number = Date.now(), h5st: string
+    h5st = h5stTool.__genH5st({
+        appid: "activities_platform",
+        body: JSON.stringify(body),
+        client: "ios",
+        clientVersion: "3.1.0",
+        functionId: fn,
+        t: timestamp.toString()
+    })
     return await get(`https://api.m.jd.com/?functionId=${fn}&body=${encodeURIComponent(JSON.stringify(body))}&t=${timestamp}&appid=activities_platform&client=ios&clientVersion=3.1.0&cthr=1&h5st=${h5st}`, {
         'Host': 'api.m.jd.com',
         'User-Agent': 'jdltapp;',
@@ -191,7 +204,7 @@ async function team(fn: string, body: object) {
     })
 }
 
-// 秒转分:秒
+// 秒转时分秒
 function secondsToMinutes(seconds: number) {
     let minutes: number = Math.floor(seconds / 60)
     let second: number = Math.floor(seconds % 60)
