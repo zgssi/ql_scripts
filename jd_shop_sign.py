@@ -306,8 +306,6 @@ for i,cookie in enumerate(cookies):
     j = 0
     for token,value in sorted(getActivityInfoDic.items(),key = lambda x:x[1][2],reverse = True):
         j += 1
-        if time.localtime().tm_hour == 0 and j > 10:
-            break
         activityId = value[0]
         shopId = value[1]
         dayRate = value[2]
