@@ -9,7 +9,7 @@
 ============Quantumultx===============
 [task_local]
 #京东大药房 玩转盘
-15 7 * 6 * jd_xs_wheels.js, tag=京东大药房 玩转盘, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+15 7 * * * jd_xs_wheels.js, tag=京东大药房 玩转盘, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
  */
 
 const $ = new Env('京东大药房 玩转盘');
