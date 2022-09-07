@@ -3,11 +3,11 @@
 
 任务脚本，默认做任务，抽奖
 
-cron:1 1 1 1 *
+cron:1 8 5-15 9 *
 ============Quantumultx===============
 [task_local]
 #9.5-9.15 洞见山海 诗语未来
-1 1 1 1 * jd_djsh.js, tag=9.5-9.15 洞见山海 诗语未来, enabled=true
+1 8 5-15 9 * jd_djsh.js, tag=9.5-9.15 洞见山海 诗语未来, enabled=true
 */
 let opencard_toShop = "false"
 const $ = new Env("9.5-9.15 洞见山海 诗语未来");

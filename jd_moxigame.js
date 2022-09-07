@@ -4,7 +4,7 @@
 日常任务，开宝箱，每日挑战，助力，转盘抽奖，游戏，新手福利领取，后续兑换
 新手福利3天内70星兑换京豆礼包
 默认定时不跑，自己改，一天5次就行，一起冲就炸了
-8 8 8 8 * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_moxigame.js 
+1 8-20/3 * * * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_moxigame.js 
 */
 
 const $ = new Env("东哥爱消除");
