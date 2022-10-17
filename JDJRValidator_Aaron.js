@@ -1,13 +1,10 @@
 /*
   由于 canvas 依赖系统底层需要编译且预编译包在 github releases 上，改用另一个纯 js 解码图片。若想继续使用 canvas 可调用 runWithCanvas 。
-
   添加 injectToRequest 用以快速修复需验证的请求。eg: $.get=injectToRequest($.get.bind($))
 */
 const https = require('https');
 const http = require('http');
 const stream = require('stream');
-const { promisify } = require('util');
-const pipelineAsync = promisify(stream.pipeline);
 const zlib = require('zlib');
 const vm = require('vm');
 const PNG = require('png-js');
@@ -324,10 +321,11 @@ class JDJRValidator {
         let res = response;
         if (res.headers['content-encoding'] === 'gzip') {
           const unzipStream = new stream.PassThrough();
-          pipelineAsync(
+          stream.pipeline(
             response,
             zlib.createGunzip(),
             unzipStream,
+            reject,
           );
           res = unzipStream;
         }
@@ -524,11 +522,11 @@ function injectToRequest2(fn, scene = 'cww') {
           console.error('验证请求失败.');
           return;
         }
-        if (data.search('验证') > -1) {
+         if (data.search('验证') > -1) {
           console.log('JDJR验证中......');
           const res = await new JDJRValidator().run(scene);
           if (res) {
-            opts.url += `&validate=${res.validate}`;
+             opts.url += `&validate=${res.validate}`;
           }
           fn(opts, cb);
         } else {
@@ -544,7 +542,7 @@ function injectToRequest2(fn, scene = 'cww') {
 async function injectToRequest(scene = 'cww') {
   console.log('JDJR验证中......');
   const res = await new JDJRValidator().run(scene);
-  return `&validate=${res.validate}`
+  return res.validate;
 }
 
 module.exports = {
