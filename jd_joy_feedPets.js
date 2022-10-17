@@ -5,7 +5,7 @@
 33 0-23/4 * * * jd_joy_feedPets.js
 */
 const $ = new Env('宠汪汪🐕喂食');
-const Slider = require('./JDJRValidator_Pure');
+const Slider = require('./JDJRValidator_Aaron');
 //$.get = Slider.injectToRequest2($.get.bind($));
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
