@@ -707,7 +707,7 @@ async function plantBeanIndex() {
 }
 function readShareCode() {
   return new Promise(async resolve => {
-    $.get({ url: `https://cdn.jsdelivr.net/gh/zspro/updateTeam@main/shareCodes/plant_bean.json`, timeout: 20000 }, (err, resp, data) => {
+    $.get({ url: `https://cdn.jsdelivr.net/gh/6dylan6/updateTeam@main/shareCodes/plant_bean.json`, timeout: 20000 }, (err, resp, data) => {
       try {
         if (err) {
           //console.log(`${JSON.stringify(err)}`)
