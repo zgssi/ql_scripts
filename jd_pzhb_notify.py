@@ -119,7 +119,7 @@ if __name__ == '__main__':
             printf("--账号:" + urllib.parse.unquote(ptpin) + "--")
         getinfo(ck)
         if inflateMaxAward != 0:
-            msg+=remarkinfos[ptpin] + ' 的膨胀红包最大金额为 '+str(inflateMaxAward)+' 元\n'
+            msg+=ptpin + ' 的膨胀红包最大金额为 '+str(inflateMaxAward)+' 元\n'
     if sendnoty:
         try:
            send('穿越寻宝膨胀红包',msg)
