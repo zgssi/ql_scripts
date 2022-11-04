@@ -1,19 +1,23 @@
 
 /*
-一次性，主页红包雨
-cron:29 20 * * *
-============Quantumultx===============
-[task_local]
-#整点红包雨
-29 20 * * * jd_homeRain.js, tag=整点红包雨, enabled=true
+京东特价APP首页-赚钱大赢家
+进APP看看，能不能进去，基本都黑的！！！
+有的能进去，助力确是黑的！！
+默认定时不跑！助力和领取任务奖励
+运行流程：设置助力码--过滤黑号--助力--领取任务奖励！！！
+助理吗变量：多个用&号隔开
+DYJSHAREID = 'xxx&xxx&xxx'
+10 10 10 10 * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
+By: https://github.com/6dylan6/jdpro
+updatetime: 2022/11/3 自动领取邀请奖励，其他优化
  */
 
-const $ = new Env('整点红包雨');
+const $ = new Env('特价版大赢家');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let jdNotify = true;
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message = '';
+let cookiesArr = [], cookie = '';
+let shareId = [];
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -22,11 +26,21 @@ if ($.isNode()) {
 } else {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
+if (process.env.DYJSHAREID) {
+    if (process.env.DYJSHAREID.indexOf('&') > -1) {
+        shareId = process.env.DYJSHAREID.split('&');
+    } else {
+        shareId = [process.env.DYJSHAREID];
+    }
+}
+let helpinfo = {};
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
+    console.log('\n运行一遍可以看到助力码，然后设置需要助力的！')
+    console.log('\n运行流程：设置助力码--过滤黑号--助力--领取任务奖励！！！\n')
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -34,7 +48,10 @@ if ($.isNode()) {
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
-            $.flag = false;
+            $.canUseCoinAmount = 0;
+            helpinfo[$.UserName] = {};
+            UA = require('./USER_AGENTS').UARAM();
+            helpinfo[$.UserName].ua = UA;
             await TotalBean();
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             if (!$.isLogin) {
@@ -44,13 +61,57 @@ if ($.isNode()) {
                 }
                 continue
             }
-            for (let i of Array(2)) {
-                await run();
-                if ($.flag) break;
-            }
-            await $.wait(2000)
+
+            await getinfo(1);
+            await $.wait(1000);
         }
     }
+    if (shareId.length > 0) {
+        console.log('\n\n开始助力...')
+        for (let j = 0; j < shareId.length; j++) {
+            console.log('\n去助力--> ' + shareId[j]);
+            for (let i = 0; i < cookiesArr.length; i++) {
+                if (cookiesArr[i]) {
+                    cookie = cookiesArr[i];
+                    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+                    $.index = i + 1;
+                    UA = helpinfo[$.UserName].ua;
+                    console.log(`\n开始【账号${$.index}】${$.nickName || $.UserName}`);
+                    if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
+                    if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
+                    await help(shareId[j]);
+                    console.log('随机等待2-5秒');
+                    await $.wait(parseInt(Math.random() * 3000 + 2000, 10))
+                }
+            }
+        }
+    } else {
+        console.log('无助立马请设置！！\n')
+    }
+
+    console.log('开始领取任务奖励...')
+
+    for (let i = 0; i < cookiesArr.length; i++) {
+        if (cookiesArr[i]) {
+            cookie = cookiesArr[i];
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            UA = helpinfo[$.UserName].ua;
+            console.log(`\n开始【账号${$.index}】${$.UserName}`);
+            if (helpinfo[$.UserName].hot) continue;
+            await gettask();
+            await $.wait(500);
+            for (let item of $.tasklist) {
+                if (item.completedTimes < item.realCompletedTimes) {
+                    console.log(`去领取${item.taskName}奖励`);
+                    await Award(item.taskId);
+                    await $.wait(500);
+                }
+            }
+            await $.wait(1000);
+        }
+    }
+
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -59,24 +120,27 @@ if ($.isNode()) {
         $.done();
     })
 
-
-
-async function run() {
+function getinfo(xc) {
     return new Promise(async (resolve) => {
-        $.post(taskUrl(), async (err, resp, data) => {
+        $.get(taskUrl('makemoneyshop/home', 'activeId=63526d8f5fe613a6adb48f03&_stk=activeId&_ste=1'), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
                     console.log(` API请求失败，请检查网路重试`)
                 } else {
-                    data = JSON.parse(data)
-                    if (data.data?.bizCode == 0) {
-                        if (data.data?.result?.hbInfo) {
-                            console.log(` 获得红包：${data.data?.result?.hbInfo.discount}`)
+                    let tostr = data.match(/\((\{.*?\})\)/)[1];
+                    data = eval('(' + tostr + ')');
+                    if (data.code == 0) {
+                        if (xc) {
+                            let sId = data.data.shareId;
+                            helpinfo[$.UserName].sId = `${sId}`;
+                            console.log('助力码：' + sId);
+                            console.log('当前营业金：' + data.data.canUseCoinAmount);
                         }
                     } else {
-                        console.log(data.data?.bizMsg)
-                        $.flag = true;
+                        console.log(data.msg);
+                        $.hotflag = true;
+                        helpinfo[$.UserName].hot = 1;
                     }
                 }
             } catch (e) {
@@ -88,82 +152,131 @@ async function run() {
     })
 }
 
-function taskUrl() {
+function gettask() {
+    return new Promise(async (resolve) => {
+        $.get(taskUrl('newtasksys/newtasksys_front/GetUserTaskStatusList', `__t=${Date.now}&source=makemoneyshop&bizCode=makemoneyshop`), async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(` API请求失败，请检查网路重试`)
+                } else {
+                    let tostr = data.match(/\((\{.*?\})\n\)/)[1];
+                    data = eval('(' + tostr + ')');
+                    if (data.ret == 0) {
+                        $.tasklist = data.data.userTaskStatusList;
+                    } else {
+                        console.log(data.msg);
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data)
+            }
+        })
+    })
+}
+function Award(id) {
+    return new Promise(async (resolve) => {
+        $.get(taskUrl('newtasksys/newtasksys_front/Award', `__t=${Date.now()}&source=makemoneyshop&taskId=${id}&bizCode=makemoneyshop`), async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(` API请求失败，请检查网路重试`)
+                } else {
+                    let tostr = data.match(/\((\{.*?\})\n\)/)[1];
+                    data = eval('(' + tostr + ')');
+                    if (data.ret == 0) {
+                        console.log('获得营业金：' + (data.data.prizeInfo / 100) + '元');
+                    } else {
+                        console.log(data.msg);
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data)
+            }
+        })
+    })
+}
+
+
+function help(shareid) {
+    return new Promise(async (resolve) => {
+        $.get(taskUrl('makemoneyshop/guesthelp', `activeId=63526d8f5fe613a6adb48f03&shareId=${shareid}&_stk=activeId,shareId&_ste=1`), async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(` API请求失败，请检查网路重试`)
+                } else {
+                    let tostr = data.match(/\((\{.*?\})\)/)[1];
+                    data = eval('(' + tostr + ')');
+                    if (data.code == 0) {
+                        console.log('助力成功！');
+                        helpinfo[$.UserName].nohelp = 1;
+                    } else if (data.msg === '已助力') {
+                        console.log('你已助力过TA！')
+                        helpinfo[$.UserName].nohelp = 1;
+                    } else if (data.code === 1006) {
+                        console.log('不能助力自己！');
+                    } else if (data.code === 1008) {
+                        console.log('今日无助力次数了！');
+                    } else {
+                        console.log(data.msg);
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data)
+            }
+        })
+    })
+}
+
+function taskUrl(fn, body) {
     return {
-        url: `https://api.m.jd.com/client.action?functionId=hby_lottery`,
-        body: `functionId=hby_lottery&networkType=wifi&appid=publicUseApi&body={"babelProjectId":"01335749","babelPageId":"4005568","latitude":"31.138374","longitude":"121.423658","activityNo":"HZWLAfYtccFFK_X4jAmIh","click":"1"}&client=wh5&clientVersion=1.0.0&t=1667304313040`,
+        url: `https://wq.jd.com/${fn}?g_ty=h5&g_tk=&appCode=msc588d6d5&${body}&h5st=&sceneval=2&callback=__jsonp1667344808184`,
         headers: {
-            'Host': 'api.m.jd.com',
-            'origin': 'https://api.m.jd.com',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+            'Origin': 'https://wq.jd.com',
+            'Referer': 'https://wqs.jd.com/sns/202210/20/make-money-shop/index.html?activeId=63526d8f5fe613a6adb48f03',
+            'User-Agent': UA,
             'Cookie': cookie
         }
     }
 }
 
 function TotalBean() {
-    return new Promise(async resolve => {
+    return new Promise((resolve) => {
         const options = {
-            url: "https://wq.jd.com/user_new/info/GetJDUserInfoUnion?sceneval=2",
+            url: 'https://plogin.m.jd.com/cgi-bin/ml/islogin',
             headers: {
-                Host: "wq.jd.com",
-                Accept: "*/*",
-                Connection: "keep-alive",
-                Cookie: cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Accept-Language": "zh-cn",
-                "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-                "Accept-Encoding": "gzip, deflate, br"
-            }
+                "Cookie": cookie,
+                "referer": "https://h5.m.jd.com/",
+                "User-Agent": UA,
+            },
+            timeout: 10000
         }
         $.get(options, (err, resp, data) => {
             try {
-                if (err) {
-                    $.logErr(err)
-                } else {
-                    if (data) {
-                        data = JSON.parse(data);
-                        if (data['retcode'] === 1001) {
-                            $.isLogin = false;
-                            return;
-                        }
-                        if (data['retcode'] === 0 && data.data && data.data.hasOwnProperty("userInfo")) {
-                            $.nickName = data.data.userInfo.baseInfo.nickname;
-                        }
-                    } else {
-                        console.log('京东服务器返回空数据');
+                if (data) {
+                    data = JSON.parse(data);
+                    if (data.islogin === "1") {
+                    } else if (data.islogin === "0") {
+                        $.isLogin = false;
                     }
                 }
             } catch (e) {
-                $.logErr(e)
-            } finally {
+                console.log(e);
+            }
+            finally {
                 resolve();
             }
-        })
-    })
+        });
+    });
 }
-function showMsg() {
-    return new Promise(resolve => {
-        if (!jdNotify) {
-            $.msg($.name, '', `${message}`);
-        } else {
-            $.log(`京东账号${$.index}${$.nickName}\n${message}`);
-        }
-        resolve()
-    })
-}
-function safeGet(data) {
-    try {
-        if (typeof JSON.parse(data) == "object") {
-            return true;
-        }
-    } catch (e) {
-        console.log(e);
-        console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
-        return false;
-    }
-}
+
 function jsonParse(str) {
     if (typeof str == "string") {
         try {
