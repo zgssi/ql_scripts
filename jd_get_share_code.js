@@ -715,7 +715,7 @@ async function getShareCode() {
   await getJDFruit()
   await getJdPet()
   await getPlantBean()
-  await getJdFactory()
+  // await getJdFactory()
   await getJxFactory()
 //   await getJxNc()
   // await getJdZZ() //助力任务已结束

@@ -9,7 +9,7 @@
 DYJSHAREID = 'xxx&xxx&xxx'
 10 10 10 10 * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
 By: https://github.com/6dylan6/jdpro
-updatetime: 2022/11/3 自动领取邀请奖励，其他优化
+updatetime: 2022/11/11 助力逻辑
  */
 
 const $ = new Env('特价版大赢家');
@@ -65,12 +65,19 @@ let helpinfo = {};
             await getinfo(1);
             await $.wait(1000);
         }
+        
     }
     if (shareId.length > 0) {
         console.log('\n\n开始助力...')
+        $.index = 1;
+		let k = 0;		
+        let m = cookiesArr.length;
         for (let j = 0; j < shareId.length; j++) {
             console.log('\n去助力--> ' + shareId[j]);
-            for (let i = 0; i < cookiesArr.length; i++) {
+            helpnum = 0;
+			if ($.index === m) {console.log('已无账号可用于助力！结束\n');break};
+            for (let i = k; i < m - k; i++) {
+                if (helpnum == 10) {console.log('助力已满，跳出！\n');k = i;break};
                 if (cookiesArr[i]) {
                     cookie = cookiesArr[i];
                     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
@@ -80,8 +87,8 @@ let helpinfo = {};
                     if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
                     if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
                     await help(shareId[j]);
-                    console.log('随机等待2-5秒');
-                    await $.wait(parseInt(Math.random() * 3000 + 2000, 10))
+                    //console.log('随机等待1-2秒');
+                    await $.wait(parseInt(Math.random() * 1000 + 1000, 10))
                 }
             }
         }
@@ -102,10 +109,12 @@ let helpinfo = {};
             await gettask();
             await $.wait(500);
             for (let item of $.tasklist) {
-                if (item.completedTimes < item.realCompletedTimes) {
-                    console.log(`去领取${item.taskName}奖励`);
-                    await Award(item.taskId);
-                    await $.wait(500);
+                if (item.awardStatus !== 1) {
+                    for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
+                        console.log(`去领取${item.taskName}奖励`);
+                        await Award(item.taskId);
+                        await $.wait(500);
+                    }
                 }
             }
             await $.wait(1000);
@@ -215,11 +224,14 @@ function help(shareid) {
                     if (data.code == 0) {
                         console.log('助力成功！');
                         helpinfo[$.UserName].nohelp = 1;
+                        helpnum++;
                     } else if (data.msg === '已助力') {
                         console.log('你已助力过TA！')
                         helpinfo[$.UserName].nohelp = 1;
                     } else if (data.code === 1006) {
                         console.log('不能助力自己！');
+                        // $.qqq = [];
+                        // $.qqq.push($.index);
                     } else if (data.code === 1008) {
                         console.log('今日无助力次数了！');
                     } else {
