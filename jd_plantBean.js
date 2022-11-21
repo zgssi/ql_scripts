@@ -1,6 +1,6 @@
 /*
 种豆得豆
-updatetime:2022-10-11 做特价双签和万人团任务
+updatetime:2022-10-19 
 活动入口：京东APP我的-更多工具-种豆得豆
 已支持IOS京东多账号,云端多京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
@@ -260,12 +260,12 @@ async function doTask() {
             await $.wait(1000);
             continue;
           case 96:
-            await tjdoublesign('https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=1665408290789&h5st=20221010212450810%3B6918147264530298%3B0f6ed%3Btk02wc5421cb218nIrUUKibebHSO9xcuoGghWvuYMwC0SFXJaDjbIH5j0m1wTODJ7fc1RtfXsa5cpPVqYaFcfWpgnN63%3Badb2b487bdc5153c21cdb5904f6341286fda615ab4ebcf9a3e88e2d6b82ae05e%3B3.1%3B1665408290810%3B62f4d401ae05799f14989d31956d3c5f0a269d1342e4ecb6ab00268fc69555cdc3295f00e681fd72cd76a48b9fb3faf3579d80b37c85b023e9e8ba94d8d2b852b9cbef42726bbe41ffd8c74540f4a1ced584468ba9e46bfbef62144b678f5532e02456edc95e6131cb12c2dd5fa5c6c0496017f4d3b47ccd5533601d6637bade7c708817b3649de05cdc0f31e890c46e&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5');
-            await $.wait(2000);
-            await tjdoublesign('https://wq.jd.com/tjjdsignin/IssueReward?channel=jx_zdddsq&_t=1665408290397&h5st=20221010212450410%3B6918147264530298%3B0f6ed%3Btk02wc5421cb218nIrUUKibebHSO9xcuoGghWvuYMwC0SFXJaDjbIH5j0m1wTODJ7fc1RtfXsa5cpPVqYaFcfWpgnN63%3Bbe06e2e3ebb5fde9e89c2126456346c7c8b75462d1d0e60c41f9e46c11838a6e%3B3.1%3B1665408290410%3B62f4d401ae05799f14989d31956d3c5f0a269d1342e4ecb6ab00268fc69555cdc3295f00e681fd72cd76a48b9fb3faf3579d80b37c85b023e9e8ba94d8d2b852b9cbef42726bbe41ffd8c74540f4a1ced584468ba9e46bfbef62144b678f5532e02456edc95e6131cb12c2dd5fa5c6c0496017f4d3b47ccd5533601d6637bade7c708817b3649de05cdc0f31e890c46e&_stk=_t%2Cchannel&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5');
-            await $.wait(1000);
-            await tjdoublesign('https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=1665408290789&h5st=20221010212450810%3B6918147264530298%3B0f6ed%3Btk02wc5421cb218nIrUUKibebHSO9xcuoGghWvuYMwC0SFXJaDjbIH5j0m1wTODJ7fc1RtfXsa5cpPVqYaFcfWpgnN63%3Badb2b487bdc5153c21cdb5904f6341286fda615ab4ebcf9a3e88e2d6b82ae05e%3B3.1%3B1665408290810%3B62f4d401ae05799f14989d31956d3c5f0a269d1342e4ecb6ab00268fc69555cdc3295f00e681fd72cd76a48b9fb3faf3579d80b37c85b023e9e8ba94d8d2b852b9cbef42726bbe41ffd8c74540f4a1ced584468ba9e46bfbef62144b678f5532e02456edc95e6131cb12c2dd5fa5c6c0496017f4d3b47ccd5533601d6637bade7c708817b3649de05cdc0f31e890c46e&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5');
-            await $.wait(1000);
+            //await tjdoublesign(`https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=${Date.now()}&h5st=20221119212121629%3B7235812274907393%3B0f6ed%3Btk02w6ce01aef18nu1BI7ITY0GRHzGZYm4QAgvUlNI7sDNMkIIRWB5yQBcmGs48B1Kd89giyM6WMEBZoTeyTRE2yi6cO%3B97dcee4e91efeb5f884eb7feb1c8da1ef52ad53a90a0e3a3c74eb38f0136382d%3B3.0%3B1668864081629&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5`);
+            //await $.wait(2000);
+            //await tjdoublesign(`https://wq.jd.com/tjjdsignin/IssueReward?channel=jx_zdddsq&_t=${Date.now()}&h5st=20221119212121629%3B7235812274907393%3B0f6ed%3Btk02w6ce01aef18nu1BI7ITY0GRHzGZYm4QAgvUlNI7sDNMkIIRWB5yQBcmGs48B1Kd89giyM6WMEBZoTeyTRE2yi6cO%3B97dcee4e91efeb5f884eb7feb1c8da1ef52ad53a90a0e3a3c74eb38f0136382d%3B3.0%3B1668864081629&_stk=_t%2Cchannel&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5`);
+            //await $.wait(1000);
+            //await tjdoublesign(`https://wq.jd.com/tjjdsignin/SignedInfo?channel=jx_zdddsq&_t=${Date.now()}&h5st=20221119212121629%3B7235812274907393%3B0f6ed%3Btk02w6ce01aef18nu1BI7ITY0GRHzGZYm4QAgvUlNI7sDNMkIIRWB5yQBcmGs48B1Kd89giyM6WMEBZoTeyTRE2yi6cO%3B97dcee4e91efeb5f884eb7feb1c8da1ef52ad53a90a0e3a3c74eb38f0136382d%3B3.0%3B1668864081629&_stk=_t%2Cchannel&_=1665408290814&sceneval=2&g_login_type=1&g_ty=ajax&appCode=msc588d6d5`);
+            //await $.wait(1000);
             continue;
           case 94:
             continue;
@@ -578,7 +578,7 @@ function tjdoublesign(url) {
     headers: {
       'Accept': 'application/json',
       'Referer': 'https://wqs.jd.com/',
-      'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+      'User-Agent': getUA(),
       'Cookie': cookie
     }
   }
@@ -901,6 +901,20 @@ function getParam(url, name) {
   const r = url.match(reg)
   if (r != null) return unescape(r[2]);
   return null;
+}
+function getUA() {
+  getstr = function (x) {
+    let e = '', t = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (let i = 0; i < x; i++) {
+      let n = Math.round(Math.random() * (t.length - 1));
+      e += t.substring(n, n + 1);
+    }
+    return e;
+  }
+  let adod = Buffer.from(getstr(16), 'utf8').toString('base64');
+  let od = getstr(48);
+  ep = encodeURIComponent(JSON.stringify({ 'hdid': 'JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=', 'ts': Date.now(), 'ridx': -1, 'cipher': { 'sv': 'EG==', 'ad': adod, 'od': od, 'ov': 'Ctq=', 'ud': adod }, 'ciphertype': 5, 'version': '1.2.0', 'appname': 'com.jingdong.app.mall' }));
+  return `jdapp;android;11.2.0;;;appBuild/98413;ef/1;ep/${ep};Mozilla/5.0 (Linux; Android 9; LYA-AL00 Build/HUAWEILYA-AL00L; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046033 Mobile Safari/537.36`;
 }
 function jsonParse(str) {
   if (typeof str == "string") {
