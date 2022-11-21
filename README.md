@@ -3,12 +3,12 @@
 
 ### 直连
 ```
-ql repo https://github.com/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|utils" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|JDSignValidator|JDJRValidator_Aaron|sign_graphics_validate|utils"
+ql repo https://github.com/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|utils" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|JDSignValidator|JDJRValidator_Aaron|sign_graphics_validate|utils|function"
 ```
 
 ### 代理（推荐）
 ```
-ql repo https://hub.gitfast.tk/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|utils" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|JDSignValidator|JDJRValidator_Aaron|sign_graphics_validate|utils"
+ql repo https://hub.gitfast.tk/zspro/ql_scripts.git "jd_|jx_|sendNotify.js" "backup|utils" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|JDSignValidator|JDJRValidator_Aaron|sign_graphics_validate|utils|function"
 ```
 备用代理地址
 ```
