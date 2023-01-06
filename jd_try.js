@@ -458,8 +458,8 @@ function try_feedsList(tabId, page) {
                                         args_xh.printLog ? console.log(`商品被过滤，提供申请的份数小于预设申请的份数 \n`) : ''
                                     } else if (parseFloat(item.applyNum) > args_xh.applyNumFilter && item.applyNum !== null) {
                                         args_xh.printLog ? console.log(`商品被过滤，已申请人数大于预设的${args_xh.applyNumFilter}人 \n`) : ''
-                                    } else if (item.jdPrice === null) {
-                                        args_xh.printLog ? console.log(`商品被过滤，商品无价，不能申请 \n`) : ''
+                                    // } else if (item.jdPrice === null) {
+                                    //     args_xh.printLog ? console.log(`商品被过滤，商品无价，不能申请 \n`) : ''
                                     } else if (parseFloat(item.trialPrice) > args_xh.trialPrice) {
                                         args_xh.printLog ? console.log(`商品被过滤，商品试用价大于预设试用价 \n`) : ''
                                     } else if (args_xh.titleFilters.some(fileter_word => item.skuTitle.includes(fileter_word) ? tempKeyword = fileter_word : '')) {
