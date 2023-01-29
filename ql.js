@@ -25,7 +25,7 @@ async function getToken() {
   return authConfig.token;
 }
 
-module.exports.getEnvs = async () => {
+module.exports.getEnvs = async () => {  
   const token = await getToken();
   const body = await api({
     url: 'api/envs',
