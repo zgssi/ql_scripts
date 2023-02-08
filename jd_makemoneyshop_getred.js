@@ -1,15 +1,19 @@
 /*
-赚钱大赢家提现
+赚钱大赢家兑换50
 
-58 59 23 * * * jd_makemoneyshop_reward.js
-
+58 59 23 * * * jd_makemoneyshop_getred.js
+默认换50，可改id
+"id": "8609ec76a8a70db9a5443376d34fa26a" 50元
+"id": "b141ddd915d20f078d69f6910b02a60a" 8元
+"id": "66d9058514891de12e96588697cc3bb3" 3元
+"id": "d71b23a381ada0934039d890ad22ab8d" 0.5元
 默认不执行
 默认只执行1个ck,多账号请单独指定ck
 全部ck并发 task jd_makemoneyshop_reward.js conc JD_COOKIE
 指定某个ck或者某些ck task jd_fruit.js desi JD_COOKIE 1 或者 task jd_fruit.js desi JD_COOKIE 1-5
-
 */
-const $ = new Env("赚钱大赢家提现");
+let redid="8609ec76a8a70db9a5443376d34fa26a";//兑换50元
+const $ = new Env("大赢家兑50红包");
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -31,7 +35,7 @@ if ($.isNode()) {
     return;
   }
   if (isCashOut === false) {
-    console.log('[赚钱大赢家提现]默认不执行,需要执行 isCashOut 设置为 true,更多说明看注释')
+    console.log('默认不执行,需要执行 isCashOut 设置为 true,更多说明看注释')
     return
   }
   for (let i = 0; i < 1; i++) {
@@ -54,19 +58,10 @@ if ($.isNode()) {
       }
       $.ADID = getUUID("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", 1);
       $.UUID = getUUID("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-      //await getHome()
-      //if ($.isNormal) {
-        await getExchangequery()
-        //await getExchange()
-        if (cashout) {
-          cashout = cashout.reverse()
-          // console.log(cashout)
-          for (const cash of cashout) {
-            console.log('去提现 -> '+cash.name)
-            await getExchangeOut(cash.id)
-          }
-        }
-      //}
+	  for (let i of Array(3)){
+	    getred(redid);
+		await $.wait(200);
+      }
     }
   }
 })().catch((e) => { $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '') }).finally(() => { $.done(); })
@@ -110,7 +105,7 @@ async function getHome(){
 async function getExchangequery(){
   return new Promise(async resolve => {
     const options = {
-      url: `https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t=1675779008647&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid=7296248594457&cthr=1&loginType=2&body=%7B%22activeId%22%3A%2263526d8f5fe613a6adb48f03%22%2C%22sceneval%22%3A2%2C%22buid%22%3A325%2C%22appCode%22%3A%22ms2362fc9e%22%2C%22time%22%3A1675779008647%2C%22signStr%22%3A%2274a7040ca4225c03a11c792c44f98082%22%7D`,
+      url: `https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid=7296248594457&cthr=1&body=%7B%22activeId%22%3A%2263526d8f5fe613a6adb48f03%22%2C%22sceneval%22%3A2%2C%22buid%22%3A325%2C%22appCode%22%3A%22msc588d6d5%22%2C%22time%22%3A1671265664838%2C%22signStr%22%3A%22%22%7D&t=1671265664839&loginType=2`,
       headers: {
         'Accept':'*/*',
         'Accept-Encoding': 'gzip, deflate, br',
@@ -153,43 +148,9 @@ async function getExchangequery(){
   })
 }
 
-async function getExchange(){
-  return new Promise(async resolve => {
-    const options = {
-      url: `https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t=1675779008647&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid=7296248594457&cthr=1&loginType=2&body=%7B%22activeId%22%3A%2263526d8f5fe613a6adb48f03%22%2C%22sceneval%22%3A2%2C%22buid%22%3A325%2C%22appCode%22%3A%22ms2362fc9e%22%2C%22time%22%3A1675779008647%2C%22signStr%22%3A%2274a7040ca4225c03a11c792c44f98082%22%7D`,
-      headers: {
-        'Accept':'*/*',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
-        'Cookie': cookie,
-        'Referer': 'https://wqs.jd.com/',
-        "User-Agent": `jdapp;iPhone;9.5.4;13.6;${$.UUID};network/wifi;ADID/${$.ADID};model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`,
-      }
-    }
-    $.get(options, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-        } else {
-          if (data) {
-            data = JSON.parse(data);
-            if (data.data && data.code === 0) {
-              // console.log(data.data.records)
-            }
-          } else {
-            console.log(`京东服务器返回空数据`)
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
 
-async function getExchangeOut(id){
+
+async function getred(id){
   return new Promise(async resolve => {
     const options = {
       url: `https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&body=%7B%22bizCode%22%3A%22makemoneyshop%22%2C%22ruleId%22%3A%22${id}%22%2C%22sceneval%22%3A2%2C%22buid%22%3A325%2C%22appCode%22%3A%22%22%2C%22time%22%3A${Date.now()}%2C%22signStr%22%3A%22%22%7D`,
@@ -207,7 +168,11 @@ async function getExchangeOut(id){
         if (err) {
           console.log(`${JSON.stringify(err)}`)
         } else {
-          console.log(JSON.parse(data));
+          if (data) {
+              console.log(JSON.parse(data));
+          } else {
+            console.log(`京东服务器返回空数据`)
+          }
         }
       } catch (e) {
         $.logErr(e, resp)
