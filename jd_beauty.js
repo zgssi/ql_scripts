@@ -92,7 +92,6 @@ async function accountCheck() {
   if (!$.token || !$.token2) {
     console.log(`\n\n提示：请尝试换服务器ip或者设置"xinruimz-isv.isvjcloud.com"域名直连，或者自定义UA再次尝试(环境变量JD_USER_AGENT)\n\n`)
     $.accountCheck = false;
-    return
   }
   let client = new WebSocket(`wss://xinruimz-isv.isvjcloud.com/wss/?token=${$.token}`, null, {
     headers: {
