@@ -3,12 +3,12 @@
 
 ### 直连
 ```
-ql repo https://github.com/zgssi/ql_scripts.git "jd_|jx_|sendNotify.js" "" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|sign_graphics_validate|function"
+ql repo https://github.com/zgssi/ql_scripts.git "jd_|jx_|sendNotify.js" "" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|function|sign_graphics_validate|JDJRValidator_Pure"
 ```
 
 ### 代理（推荐）
 ```
-ql repo https://hub.gitfast.tk/zgssi/ql_scripts.git "jd_|jx_|sendNotify.js" "" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|sign_graphics_validate|function"
+ql repo https://hub.gitfast.tk/zgssi/ql_scripts.git "jd_|jx_|sendNotify.js" "" "ql|sendNotify|jdCookie|USER_AGENTS|ShareCodes|function|sign_graphics_validate|JDJRValidator_Pure"
 ```
 备用代理地址
 ```
@@ -22,7 +22,7 @@ https://hub.fastgit.xyz/
 
 ### 青龙配置文件
 ```
-RepoFileExtensions="js py ts"
+RepoFileExtensions="js py"
 ```
 ```
 GithubProxyUrl=""
