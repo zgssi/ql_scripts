@@ -630,7 +630,7 @@ function getSignfromDY(functionId, body) {
   let data = { 'fn': functionId, 'body': JSON.stringify(body) };
   return new Promise((resolve) => {
     let opt = {
-      url: "https://api.nolanstore.top/sign",
+      url: "https://api.nolanstore.cc/sign",
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
